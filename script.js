@@ -317,8 +317,8 @@ function animateCardsEntrance() {
         }, 100);
     }
     
-    // Then animate project cards (excluding sticky note)
-    const allCards = document.querySelectorAll('.project-card:not(.sticky-note-card)');
+    // Then animate project cards (excluding sticky note) and compact cards
+    const allCards = document.querySelectorAll('.project-card:not(.sticky-note-card), .compact-card');
     
     allCards.forEach((card, index) => {
         // Stagger the animation with increasing delays (start after sticky note)
