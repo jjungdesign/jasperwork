@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jasper Intro - My Projects</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="canvas-container">
+        <!-- Sticky Note Intro Card - Fixed to viewport -->
+        <div class="sticky-note-card project-card" data-project="intro">
+            <div class="card-content">
+                <div class="sticky-note-logo">Jasper</div>
+                <p class="sticky-note-text">At Jasper, I designed across Growth and Core IQ—helping new users reach value fast, then scaling the IQ foundation: setup, lifecycle, and governance.</p>
+            </div>
+            <div class="card-expanded-content">
+                <div class="expanded-header">
+                    <h2>Jasper</h2>
+                    <button class="close-btn" onclick="closeCard(this)">×</button>
+                </div>
+                <div class="expanded-body">
+                    <div class="project-section">
+                        <h3>About</h3>
+                        <p>At Jasper, I designed across Growth and Core IQ—helping new users reach value fast, then scaling the IQ foundation: setup, lifecycle, and governance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Canvas Area -->
+        <div class="canvas" id="canvas">
+            <div class="canvas-space" id="canvasSpace">
+            <!-- Project Cards -->
+            <div class="project-card" data-project="1" style="left: 500px; top: 70px;">
+                <div class="card-content">
+                    <div class="card-icon">📊</div>
+                    <h3 class="card-title">Marketing Analytics Dashboard</h3>
+                    <p class="card-description">Comprehensive analytics platform for tracking campaign performance</p>
+                </div>
+                <div class="card-expanded-content">
+                    <div class="expanded-header">
+                        <h2>Marketing Analytics Dashboard</h2>
+                        <button class="close-btn" onclick="closeCard(this)">×</button>
+                    </div>
+                    <div class="expanded-body">
+                        <div class="project-section">
+                            <h3>Overview</h3>
+                            <p>A comprehensive analytics platform designed to track and visualize marketing campaign performance across multiple channels. Built with modern web technologies to provide real-time insights and data-driven decision making.</p>
+                        </div>
+                        <div class="project-section">
+                            <h3>Key Features</h3>
+                            <ul>
+                                <li>Real-time campaign tracking</li>
+                                <li>Multi-channel analytics</li>
+                                <li>Customizable dashboards</li>
+                                <li>Export and reporting tools</li>
+                            </ul>
+                        </div>
+                        <div class="project-section">
+                            <h3>Technologies</h3>
+                            <div class="tech-tags">
+                                <span class="tech-tag">React</span>
+                                <span class="tech-tag">TypeScript</span>
+                                <span class="tech-tag">D3.js</span>
+                                <span class="tech-tag">Node.js</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card" data-project="2" style="left: 860px; top: 70px;">
+                <div class="card-content">
+                    <div class="card-icon">🎨</div>
+                    <h3 class="card-title">Brand Design System</h3>
+                    <p class="card-description">Comprehensive design system and component library</p>
+                </div>
+                <div class="card-expanded-content">
+                    <div class="expanded-header">
+                        <h2>Brand Design System</h2>
+                        <button class="close-btn" onclick="closeCard(this)">×</button>
+                    </div>
+                    <div class="expanded-body">
+                        <div class="project-section">
+                            <h3>Overview</h3>
+                            <p>A complete design system that ensures brand consistency across all digital products. Includes reusable components, design tokens, and comprehensive documentation.</p>
+                        </div>
+                        <div class="project-section">
+                            <h3>Key Features</h3>
+                            <ul>
+                                <li>Component library with 50+ components</li>
+                                <li>Design tokens and theming</li>
+                                <li>Accessibility guidelines</li>
+                                <li>Storybook documentation</li>
+                            </ul>
+                        </div>
+                        <div class="project-section">
+                            <h3>Technologies</h3>
+                            <div class="tech-tags">
+                                <span class="tech-tag">React</span>
+                                <span class="tech-tag">Storybook</span>
+                                <span class="tech-tag">Figma</span>
+                                <span class="tech-tag">CSS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card" data-project="3" style="left: 1220px; top: 70px;">
+                <div class="card-content">
+                    <div class="card-icon">🚀</div>
+                    <h3 class="card-title">E-commerce Platform</h3>
+                    <p class="card-description">Full-stack e-commerce solution with AI recommendations</p>
+                </div>
+                <div class="card-expanded-content">
+                    <div class="expanded-header">
+                        <h2>E-commerce Platform</h2>
+                        <button class="close-btn" onclick="closeCard(this)">×</button>
+                    </div>
+                    <div class="expanded-body">
+                        <div class="project-section">
+                            <h3>Overview</h3>
+                            <p>A modern e-commerce platform featuring AI-powered product recommendations, seamless checkout experience, and comprehensive inventory management.</p>
+                        </div>
+                        <div class="project-section">
+                            <h3>Key Features</h3>
+                            <ul>
+                                <li>AI product recommendations</li>
+                                <li>Secure payment processing</li>
+                                <li>Inventory management</li>
+                                <li>Order tracking system</li>
+                            </ul>
+                        </div>
+                        <div class="project-section">
+                            <h3>Technologies</h3>
+                            <div class="tech-tags">
+                                <span class="tech-tag">Next.js</span>
+                                <span class="tech-tag">Python</span>
+                                <span class="tech-tag">PostgreSQL</span>
+                                <span class="tech-tag">Stripe</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card" data-project="4" style="left: 500px; top: 320px;">
+                <div class="card-content">
+                    <div class="card-icon">💬</div>
+                    <h3 class="card-title">AI Chat Assistant</h3>
+                    <p class="card-description">Intelligent chatbot with natural language processing</p>
+                </div>
+                <div class="card-expanded-content">
+                    <div class="expanded-header">
+                        <h2>AI Chat Assistant</h2>
+                        <button class="close-btn" onclick="closeCard(this)">×</button>
+                    </div>
+                    <div class="expanded-body">
+                        <div class="project-section">
+                            <h3>Overview</h3>
+                            <p>An intelligent chatbot assistant powered by advanced NLP models, designed to provide instant customer support and improve user engagement.</p>
+                        </div>
+                        <div class="project-section">
+                            <h3>Key Features</h3>
+                            <ul>
+                                <li>Natural language understanding</li>
+                                <li>Multi-language support</li>
+                                <li>Context-aware responses</li>
+                                <li>Analytics dashboard</li>
+                            </ul>
+                        </div>
+                        <div class="project-section">
+                            <h3>Technologies</h3>
+                            <div class="tech-tags">
+                                <span class="tech-tag">React</span>
+                                <span class="tech-tag">OpenAI API</span>
+                                <span class="tech-tag">Node.js</span>
+                                <span class="tech-tag">WebSocket</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card" data-project="5" style="left: 860px; top: 320px;">
+                <div class="card-content">
+                    <div class="card-icon">📱</div>
+                    <h3 class="card-title">Mobile App</h3>
+                    <p class="card-description">Cross-platform mobile application with native performance</p>
+                </div>
+                <div class="card-expanded-content">
+                    <div class="expanded-header">
+                        <h2>Mobile App</h2>
+                        <button class="close-btn" onclick="closeCard(this)">×</button>
+                    </div>
+                    <div class="expanded-body">
+                        <div class="project-section">
+                            <h3>Overview</h3>
+                            <p>A cross-platform mobile application built with React Native, delivering native performance and seamless user experience across iOS and Android.</p>
+                        </div>
+                        <div class="project-section">
+                            <h3>Key Features</h3>
+                            <ul>
+                                <li>Cross-platform compatibility</li>
+                                <li>Offline mode support</li>
+                                <li>Push notifications</li>
+                                <li>Biometric authentication</li>
+                            </ul>
+                        </div>
+                        <div class="project-section">
+                            <h3>Technologies</h3>
+                            <div class="tech-tags">
+                                <span class="tech-tag">React Native</span>
+                                <span class="tech-tag">TypeScript</span>
+                                <span class="tech-tag">Redux</span>
+                                <span class="tech-tag">Firebase</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card" data-project="6" style="left: 1220px; top: 320px;">
+                <div class="card-content">
+                    <div class="card-icon">🔐</div>
+                    <h3 class="card-title">Security Dashboard</h3>
+                    <p class="card-description">Enterprise security monitoring and threat detection</p>
+                </div>
+                <div class="card-expanded-content">
+                    <div class="expanded-header">
+                        <h2>Security Dashboard</h2>
+                        <button class="close-btn" onclick="closeCard(this)">×</button>
+                    </div>
+                    <div class="expanded-body">
+                        <div class="project-section">
+                            <h3>Overview</h3>
+                            <p>An enterprise-grade security monitoring dashboard that provides real-time threat detection, security analytics, and compliance reporting.</p>
+                        </div>
+                        <div class="project-section">
+                            <h3>Key Features</h3>
+                            <ul>
+                                <li>Real-time threat detection</li>
+                                <li>Security event logging</li>
+                                <li>Compliance reporting</li>
+                                <li>Alert management</li>
+                            </ul>
+                        </div>
+                        <div class="project-section">
+                            <h3>Technologies</h3>
+                            <div class="tech-tags">
+                                <span class="tech-tag">Vue.js</span>
+                                <span class="tech-tag">Python</span>
+                                <span class="tech-tag">Elasticsearch</span>
+                                <span class="tech-tag">Docker</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Overlay for expanded card - outside canvas-container for proper z-index -->
+    <div class="overlay" id="overlay"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

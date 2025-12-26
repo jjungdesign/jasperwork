@@ -1,0 +1,13 @@
+{
+  "name": "jasper-intro-page",
+  "version": "1.0.0",
+  "description": "Jasper-style intro page with infinite canvas and expandable project cards",
+  "scripts": {
+    "start": "npx serve . -p 3000",
+    "dev": "npx serve . -p 3000"
+  },
+  "keywords": ["jasper", "canvas", "portfolio"],
+  "author": "",
+  "license": "MIT"
+}
+

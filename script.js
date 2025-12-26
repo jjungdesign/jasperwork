@@ -1,0 +1,332 @@
+// Canvas interaction and card expansion logic
+
+let isDragging = false;
+let startX, startY;
+let scrollLeft, scrollTop;
+let expandedCard = null;
+let hasDragged = false;
+
+// Card dragging variables
+let isDraggingCard = false;
+let draggedCard = null;
+let cardStartX, cardStartY;
+let cardInitialLeft, cardInitialTop;
+
+const canvas = document.getElementById('canvas');
+const canvasSpace = document.getElementById('canvasSpace');
+const overlay = document.getElementById('overlay');
+const cards = document.querySelectorAll('.project-card');
+
+// ============================================
+// CANVAS MOUSE PANNING - Simple implementation
+// ============================================
+
+canvas.addEventListener('mousedown', function(e) {
+    // Skip if clicking on interactive elements
+    if (e.target.closest('.project-card') || 
+        e.target.closest('.sticky-note-card') ||
+        e.target.closest('button') ||
+        expandedCard) {
+        return;
+    }
+    
+    isDragging = true;
+    canvas.style.cursor = 'grabbing';
+    canvas.style.scrollBehavior = 'auto'; // Disable smooth scroll during drag
+    
+    startX = e.pageX;
+    startY = e.pageY;
+    scrollLeft = canvas.scrollLeft;
+    scrollTop = canvas.scrollTop;
+});
+
+canvas.addEventListener('mousemove', function(e) {
+    if (!isDragging) return;
+    
+    e.preventDefault();
+    
+    const dx = e.pageX - startX;
+    const dy = e.pageY - startY;
+    
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+        hasDragged = true;
+    }
+    
+    canvas.scrollLeft = scrollLeft - dx;
+    canvas.scrollTop = scrollTop - dy;
+});
+
+canvas.addEventListener('mouseup', function() {
+    isDragging = false;
+    canvas.style.cursor = 'grab';
+});
+
+canvas.addEventListener('mouseleave', function() {
+    isDragging = false;
+    canvas.style.cursor = 'grab';
+});
+
+// ============================================
+// CARD DRAGGING
+// ============================================
+
+document.addEventListener('mouseup', function() {
+    if (isDraggingCard && draggedCard) {
+        isDraggingCard = false;
+        draggedCard.style.cursor = 'pointer';
+        document.body.style.cursor = '';
+        draggedCard = null;
+    }
+});
+
+document.addEventListener('mousemove', function(e) {
+    if (!isDraggingCard || !draggedCard) return;
+    
+    e.preventDefault();
+    
+    const deltaX = e.pageX - cardStartX;
+    const deltaY = e.pageY - cardStartY;
+    
+    draggedCard.style.left = (cardInitialLeft + deltaX) + 'px';
+    draggedCard.style.top = (cardInitialTop + deltaY) + 'px';
+});
+
+// Card dragging and expansion functionality
+cards.forEach(card => {
+    // Skip sticky note card - it's fixed position
+    if (card.classList.contains('sticky-note-card')) {
+        return;
+    }
+    
+    const cardContent = card.querySelector('.card-content');
+    
+    // Handle card drag start
+    card.addEventListener('mousedown', (e) => {
+        // Don't start card drag if clicking on buttons or expanded content
+        if (e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.closest('.card-expanded-content')) {
+            return;
+        }
+        
+        // Don't drag if card is expanded
+        if (card.classList.contains('expanded')) {
+            return;
+        }
+        
+        // Only start card drag if clicking directly on the card element or its border
+        // Don't start if clicking on card-content (that's for expansion)
+        if (e.target.closest('.card-content')) {
+            // Let the click handler handle expansion
+            return;
+        }
+        
+        e.stopPropagation();
+        e.preventDefault();
+        
+        // Start card dragging
+        isDraggingCard = true;
+        draggedCard = card;
+        
+        // Store initial mouse position
+        cardStartX = e.pageX;
+        cardStartY = e.pageY;
+        
+        // Get current card position relative to canvas-space
+        const currentLeft = parseInt(card.style.left) || 0;
+        const currentTop = parseInt(card.style.top) || 0;
+        cardInitialLeft = currentLeft;
+        cardInitialTop = currentTop;
+        
+        // Update cursor
+        card.style.cursor = 'grabbing';
+        document.body.style.cursor = 'grabbing';
+        document.body.style.userSelect = 'none';
+    });
+    
+    // Handle card click - only expand if we didn't drag the card
+    cardContent.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Small delay to check if we actually dragged
+        setTimeout(() => {
+            if (!isDraggingCard && !hasDragged && !isDragging) {
+                expandCard(card);
+            }
+            hasDragged = false;
+        }, 10);
+    });
+});
+
+// Handle sticky note card expansion (it's also a project-card)
+const stickyNoteCard = document.querySelector('.sticky-note-card');
+if (stickyNoteCard) {
+    const stickyContent = stickyNoteCard.querySelector('.card-content');
+    if (stickyContent) {
+        stickyContent.addEventListener('click', (e) => {
+            e.stopPropagation();
+            setTimeout(() => {
+                if (!hasDragged && !isDragging) {
+                    expandCard(stickyNoteCard);
+                }
+                hasDragged = false;
+            }, 10);
+        });
+    }
+    
+    stickyNoteCard.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        hasDragged = false;
+    });
+}
+
+function expandCard(card) {
+    // Close any previously expanded card
+    if (expandedCard && expandedCard !== card) {
+        closeCard(expandedCard.querySelector('.close-btn'));
+    }
+    
+    // Check if it's the sticky note card (already fixed)
+    const isStickyNote = card.classList.contains('sticky-note-card');
+    
+    if (!isStickyNote) {
+        // Store original positioning so we can restore after modal-style expand
+        card.dataset.originalLeft = card.style.left || '';
+        card.dataset.originalTop = card.style.top || '';
+        card.dataset.originalPosition = card.style.position || '';
+        card.dataset.originalTransform = card.style.transform || '';
+        card.dataset.originalZIndex = card.style.zIndex || '';
+        
+        // Modal-style expand: center in viewport, independent of scroll
+        card.style.position = 'fixed';
+        card.style.left = '50%';
+        card.style.top = '50%';
+        card.style.transform = 'translate(-50%, -50%)';
+        card.style.zIndex = '1100';
+        
+        // Hide sticky note behind the expanded card
+        const stickyNote = document.querySelector('.sticky-note-card');
+        if (stickyNote) {
+            stickyNote.classList.add('hidden-behind');
+        }
+    } else {
+        // For sticky note, just update transform
+        card.style.transform = 'translate(-50%, -50%)';
+    }
+    
+    // Expand the card
+    card.classList.add('expanded');
+    overlay.classList.add('active');
+    expandedCard = card;
+    
+    // Prevent canvas scrolling when card is expanded
+    canvas.style.overflow = 'hidden';
+}
+
+function closeCard(closeButton) {
+    const card = closeButton.closest('.project-card');
+    const isStickyNote = card.classList.contains('sticky-note-card');
+    
+    if (!isStickyNote) {
+        // Restore original position for regular cards
+        const originalLeft = card.dataset.originalLeft ?? '';
+        const originalTop = card.dataset.originalTop ?? '';
+        const originalPosition = card.dataset.originalPosition ?? '';
+        const originalTransform = card.dataset.originalTransform ?? '';
+        const originalZIndex = card.dataset.originalZIndex ?? '';
+        
+        card.style.position = originalPosition;
+        card.style.left = originalLeft;
+        card.style.top = originalTop;
+        card.style.transform = originalTransform;
+        card.style.zIndex = originalZIndex;
+        
+        // Restore sticky note z-index
+        const stickyNote = document.querySelector('.sticky-note-card');
+        if (stickyNote) {
+            stickyNote.classList.remove('hidden-behind');
+        }
+    } else {
+        // For sticky note, restore to top-left
+        card.style.top = '20px';
+        card.style.left = '20px';
+        card.style.transform = 'none';
+    }
+    
+    // Collapse the card
+    card.classList.remove('expanded');
+    overlay.classList.remove('active');
+    expandedCard = null;
+    
+    // Re-enable canvas scrolling
+    canvas.style.overflow = 'auto';
+}
+
+// Close card when clicking overlay
+overlay.addEventListener('click', () => {
+    if (expandedCard) {
+        const closeBtn = expandedCard.querySelector('.close-btn');
+        if (closeBtn) {
+            closeCard(closeBtn);
+        }
+    }
+});
+
+// Close card with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && expandedCard) {
+        const closeBtn = expandedCard.querySelector('.close-btn');
+        if (closeBtn) {
+            closeCard(closeBtn);
+        }
+    }
+});
+
+// Prevent card expansion when clicking inside expanded content
+cards.forEach(card => {
+    const expandedContent = card.querySelector('.card-expanded-content');
+    if (expandedContent) {
+        expandedContent.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    }
+});
+
+// Don't use smooth scroll - it interferes with mouse drag panning
+canvas.style.scrollBehavior = 'auto';
+
+// Anchor page to top when first loaded
+window.addEventListener('load', () => {
+    if (!canvasSpace) return;
+    
+    // Set scroll position to top-left (0, 0)
+    canvas.scrollLeft = 0;
+    canvas.scrollTop = 0;
+    
+    // Small delay to ensure scroll position is set before animation
+    setTimeout(() => {
+        // Animate cards appearing one by one
+        animateCardsEntrance();
+    }, 50);
+});
+
+// Animate cards appearing one by one with staggered delays
+function animateCardsEntrance() {
+    // Animate sticky note first
+    const stickyNote = document.querySelector('.sticky-note-card');
+    if (stickyNote) {
+        setTimeout(() => {
+            stickyNote.classList.add('sticky-visible');
+        }, 100);
+    }
+    
+    // Then animate project cards (excluding sticky note)
+    const allCards = document.querySelectorAll('.project-card:not(.sticky-note-card)');
+    
+    allCards.forEach((card, index) => {
+        // Stagger the animation with increasing delays (start after sticky note)
+        const delay = 300 + (index * 150); // 300ms delay for sticky note, then 150ms between each card
+        
+        setTimeout(() => {
+            card.classList.add('card-visible');
+        }, delay);
+    });
+}
+
