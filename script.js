@@ -76,6 +76,7 @@ document.addEventListener('mouseup', function() {
         draggedCard.style.cursor = 'pointer';
         document.body.style.cursor = '';
         draggedCard = null;
+        // Keep hasDragged true so click handler knows we just dragged
     }
 });
 
@@ -86,6 +87,11 @@ document.addEventListener('mousemove', function(e) {
     
     const deltaX = e.pageX - cardStartX;
     const deltaY = e.pageY - cardStartY;
+    
+    // Mark as dragged if moved more than 5px
+    if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
+        hasDragged = true;
+    }
     
     draggedCard.style.left = (cardInitialLeft + deltaX) + 'px';
     draggedCard.style.top = (cardInitialTop + deltaY) + 'px';
@@ -100,7 +106,7 @@ cards.forEach(card => {
     
     const cardContent = card.querySelector('.card-content');
     
-    // Handle card drag start
+    // Handle card drag start - entire card is draggable
     card.addEventListener('mousedown', (e) => {
         // Don't start card drag if clicking on buttons or expanded content
         if (e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.closest('.card-expanded-content')) {
@@ -112,15 +118,10 @@ cards.forEach(card => {
             return;
         }
         
-        // Only start card drag if clicking directly on the card element or its border
-        // Don't start if clicking on card-content (that's for expansion)
-        if (e.target.closest('.card-content')) {
-            // Let the click handler handle expansion
-            return;
-        }
-        
         e.stopPropagation();
-        e.preventDefault();
+        
+        // Reset drag state
+        hasDragged = false;
         
         // Start card dragging
         isDraggingCard = true;
@@ -142,8 +143,13 @@ cards.forEach(card => {
         document.body.style.userSelect = 'none';
     });
     
-    // Handle card click - only expand if we didn't drag the card
-    cardContent.addEventListener('click', (e) => {
+    // Handle card click - whole card is clickable, expand if we didn't drag
+    card.addEventListener('click', (e) => {
+        // Don't expand if clicking close button
+        if (e.target.closest('.close-btn')) return;
+        // Don't expand if already expanded
+        if (card.classList.contains('expanded')) return;
+        
         e.stopPropagation();
         // Small delay to check if we actually dragged
         setTimeout(() => {
@@ -155,21 +161,23 @@ cards.forEach(card => {
     });
 });
 
-// Handle sticky note card expansion (it's also a project-card)
+// Handle sticky note card expansion (whole card clickable)
 const stickyNoteCard = document.querySelector('.sticky-note-card');
 if (stickyNoteCard) {
-    const stickyContent = stickyNoteCard.querySelector('.card-content');
-    if (stickyContent) {
-        stickyContent.addEventListener('click', (e) => {
-            e.stopPropagation();
-            setTimeout(() => {
-                if (!hasDragged && !isDragging) {
-                    expandCard(stickyNoteCard);
-                }
-                hasDragged = false;
-            }, 10);
-        });
-    }
+    stickyNoteCard.addEventListener('click', (e) => {
+        // Don't expand if clicking close button
+        if (e.target.closest('.close-btn')) return;
+        // Don't expand if already expanded
+        if (stickyNoteCard.classList.contains('expanded')) return;
+        
+        e.stopPropagation();
+        setTimeout(() => {
+            if (!hasDragged && !isDragging) {
+                expandCard(stickyNoteCard);
+            }
+            hasDragged = false;
+        }, 10);
+    });
     
     stickyNoteCard.addEventListener('mousedown', (e) => {
         e.stopPropagation();

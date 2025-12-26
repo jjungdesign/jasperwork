@@ -1,12 +1,11 @@
 :root {
-    --jasper-violet: #8b5cf6;
-    --jasper-purple: #a855f7;
-    --jasper-blue: #3b82f6;
-    --jasper-indigo: #6366f1;
-
-    --bg: #fafafa;
-    --text: #111827;
-    --muted: rgba(107, 114, 128, 0.95);
+    --retro-blue: #1a1a6c;
+    --retro-blue-light: #3030a0;
+    --retro-cream: #f8f6f0;
+    --retro-grid: rgba(26, 26, 108, 0.12);
+    --bg: #f8f6f0;
+    --text: #1a1a6c;
+    --muted: rgba(26, 26, 108, 0.6);
 }
 
 * {
@@ -39,24 +38,25 @@ body {
 
 /* Sticky Note Card Styles - Fixed to viewport top-left */
 .sticky-note-card {
-    position: fixed;
+    position: fixed !important;
     top: 20px;
     left: 20px;
     width: 400px;
     min-height: 200px;
-    background: #fef9c3;
-    border: 1px solid rgba(139, 92, 246, 0.2);
-    border-radius: 16px;
+    background: var(--retro-blue) !important;
+    border: 2px solid var(--retro-blue);
+    border-radius: 0;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
     z-index: 200;
     overflow: hidden;
     will-change: transform, box-shadow;
-    /* Enable text selection within card only */
-    user-select: text;
-    -webkit-user-select: text;
-    -moz-user-select: text;
-    -ms-user-select: text;
+    box-shadow: 6px 6px 0 rgba(26, 26, 108, 0.3);
+    /* Disable text selection to prevent highlighting during drag */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     /* Initial state for entrance animation */
     opacity: 0;
     transform: translateY(20px) scale(0.95);
@@ -68,7 +68,7 @@ body {
 }
 
 .sticky-note-card.sticky-visible {
-    opacity: 1;
+    opacity: 1 !important;
     transform: translateY(0) scale(1);
     animation: stickyEntrance 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
@@ -85,8 +85,8 @@ body {
 }
 
 .sticky-note-card:hover {
-    transform: translateY(-4px) scale(1.02);
-    border-color: rgba(139, 92, 246, 0.4);
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 rgba(26, 26, 108, 0.4);
 }
 
 .sticky-note-card.expanded {
@@ -95,56 +95,94 @@ body {
     max-height: calc(100vh - 120px);
     z-index: 1100;
     cursor: default;
-    border-color: rgba(139, 92, 246, 0.5);
-    background: #ffffff;
+    border: 2px solid var(--retro-blue);
+    background: #ffffff !important;
     /* Center when expanded */
     top: 50%;
     left: 50%;
-    /* Zoom-in animation */
-    animation: zoomIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 12px 12px 0 var(--retro-blue);
+    /* Smooth animation */
+    animation: modalOpen 0.3s ease-out forwards;
 }
 
 .sticky-note-card .card-content {
     padding: 24px;
+    padding-top: 40px; /* Space for label */
     height: 100%;
-    display: flex;
+    display: flex !important;
     flex-direction: column;
     gap: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.sticky-note-card:not(.expanded) .card-content {
+    display: flex !important;
+}
+
+.card-label {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+}
+
+.project-card .card-label {
+    color: var(--retro-blue);
+    opacity: 0.5;
 }
 
 .sticky-note-logo {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-size: 32px;
-    font-weight: 700;
-    color: #1f2937;
-    letter-spacing: -0.02em;
+    width: 120px;
+    height: auto;
+    margin-bottom: 12px;
+    filter: brightness(0) invert(1); /* Make logo white on dark background */
+}
+
+/* Ensure sticky note content is visible */
+.sticky-note-card:not(.expanded) .card-expanded-content {
+    display: none !important;
+}
+
+.expanded-logo {
+    width: 140px;
+    height: auto;
 }
 
 .sticky-note-text {
     font-size: 15px;
     line-height: 1.6;
-    color: #374151;
+    color: #ffffff;
     margin: 0;
 }
 
-/* Canvas Styles - Jasper Portfolio reference */
+/* When expanded, sticky note has white bg so text should be dark */
+.sticky-note-card.expanded .sticky-note-text {
+    color: var(--retro-blue);
+}
+
+.sticky-note-card.expanded .sticky-note-logo {
+    filter: none; /* Show original logo color when expanded */
+}
+
+/* Canvas Styles - Retro Print Style */
 .canvas {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
-    background-color: var(--bg);
+    background-color: var(--retro-cream);
     background-image:
-        url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"),
-        radial-gradient(ellipse 80% 60% at 10% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
-        radial-gradient(ellipse 60% 80% at 90% 10%, rgba(59, 130, 246, 0.10) 0%, transparent 50%),
-        radial-gradient(ellipse 70% 70% at 50% 90%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
-        radial-gradient(ellipse 50% 60% at 80% 70%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(236, 72, 153, 0.05) 0%, transparent 50%),
-        linear-gradient(135deg, #fafafa 0%, #f5f3ff 25%, #faf5ff 50%, #f0f9ff 75%, #fafafa 100%);
-    background-attachment: fixed;
-    background-blend-mode: overlay, normal, normal, normal, normal, normal, normal;
+        linear-gradient(var(--retro-grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--retro-grid) 1px, transparent 1px);
+    background-size: 32px 32px;
     overflow: scroll;
     padding: 0;
     cursor: grab;
@@ -164,38 +202,6 @@ body {
     cursor: grabbing;
 }
 
-/* Dot grid overlay + cross-hatch (like Jasper Portfolio) */
-.canvas::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image:
-        radial-gradient(circle at center, rgba(139, 92, 246, 0.08) 1.5px, transparent 1.5px),
-        radial-gradient(circle at center, rgba(139, 92, 246, 0.04) 1px, transparent 1px);
-    background-size: 48px 48px, 24px 24px;
-    background-position: 0 0, 12px 12px;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.canvas::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image:
-        linear-gradient(90deg, rgba(139, 92, 246, 0.02) 1px, transparent 1px),
-        linear-gradient(rgba(139, 92, 246, 0.02) 1px, transparent 1px);
-    background-size: 48px 48px;
-    pointer-events: none;
-    z-index: 0;
-}
-
 .canvas-space {
     position: relative;
     width: 4000px;
@@ -205,26 +211,27 @@ body {
     user-select: none;
 }
 
-/* Project Card Styles - frosted Jasper Portfolio node style */
+/* Project Card Styles - Retro Print Style */
 .project-card {
     position: absolute;
     width: 320px;
     min-height: 200px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(139, 92, 246, 0.2);
-    border-radius: 16px;
+    background: #ffffff;
+    border: 2px solid var(--retro-blue);
+    border-radius: 0;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
     z-index: 100;
     overflow: hidden;
     will-change: transform, box-shadow;
+    box-shadow: 6px 6px 0 var(--retro-blue);
     /* Isolate each card as its own component */
     isolation: isolate;
-    /* Enable text selection within card only */
-    user-select: text;
-    -webkit-user-select: text;
-    -moz-user-select: text;
-    -ms-user-select: text;
+    /* Disable text selection to prevent highlighting during drag */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     /* Initial state for entrance animation */
     opacity: 0;
     transform: translateY(20px) scale(0.95);
@@ -249,9 +256,9 @@ body {
 }
 
 .project-card.card-visible:hover {
-    transform: translateY(-4px) scale(1.02);
-    border-color: rgba(139, 92, 246, 0.4);
-    background: rgba(255, 255, 255, 0.95);
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 var(--retro-blue);
+    background: #ffffff;
 }
 
 .project-card.expanded {
@@ -263,16 +270,19 @@ body {
     max-height: calc(100vh - 120px);
     z-index: 1100 !important;
     cursor: default;
-    border-color: rgba(139, 92, 246, 0.5);
+    border: 2px solid var(--retro-blue);
     background: #ffffff;
-    /* Zoom-in animation */
-    animation: zoomIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    box-shadow: 12px 12px 0 var(--retro-blue);
+    /* Smooth animation */
+    animation: modalOpen 0.3s ease-out forwards;
 }
 
-@keyframes zoomIn {
+@keyframes modalOpen {
     from {
-        opacity: 0.8;
-        transform: translate(-50%, -50%) scale(0.85);
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.95);
     }
     to {
         opacity: 1;
@@ -290,13 +300,14 @@ body {
     position: absolute;
     width: 280px;
     padding: 24px 28px;
-    background: #fef9c3;
-    border: 1px solid rgba(139, 92, 246, 0.2);
-    border-radius: 16px;
+    background: var(--retro-blue);
+    border: 2px solid var(--retro-blue);
+    border-radius: 0;
     z-index: 100;
     opacity: 0;
     transform: translateY(20px) scale(0.95);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
+    box-shadow: 6px 6px 0 rgba(26, 26, 108, 0.3);
 }
 
 .compact-card.card-visible {
@@ -309,7 +320,7 @@ body {
     font-family: 'Playfair Display', Georgia, serif;
     font-size: 20px;
     font-weight: 500;
-    color: #1f2937;
+    color: #ffffff;
     line-height: 1.4;
     margin: 0;
     text-align: left;
@@ -317,7 +328,8 @@ body {
 
 .compact-text .highlight {
     font-weight: 700;
-    color: var(--jasper-violet);
+    color: #ffffff;
+    text-decoration: underline;
 }
 
 .card-icon {
@@ -325,20 +337,50 @@ body {
     margin-bottom: 16px;
 }
 
+/* Card with bottom image */
+.card-with-image {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 0;
+    overflow: hidden;
+}
+
+.card-with-image .card-content {
+    flex: 0 0 auto;
+}
+
+.card-image-bottom {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-top: auto;
+    border-radius: 0;
+    transform: scale(1.2);
+    transform-origin: center center;
+}
+
+.card-with-image.expanded .card-image-bottom {
+    display: none;
+}
+
+.card-with-image.expanded::after {
+    display: none;
+}
+
 .card-title {
     font-family: 'Playfair Display', Georgia, serif;
     font-size: 22px;
     font-weight: 600;
-    color: #1f2937;
+    color: var(--retro-blue);
     letter-spacing: -0.02em;
     margin-bottom: 8px;
     line-height: 1.3;
-    letter-spacing: -0.02em;
 }
 
 .card-description {
     font-size: 14px;
-    color: #6b7280;
+    color: var(--retro-blue);
+    opacity: 0.7;
     line-height: 1.6;
 }
 
@@ -361,26 +403,26 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 24px;
-    border-bottom: 1px solid rgba(139, 92, 246, 0.15);
-    background: linear-gradient(to bottom, rgba(139, 92, 246, 0.03), transparent);
+    border-bottom: 2px solid var(--retro-blue);
+    background: var(--retro-cream);
 }
 
 .expanded-header h2 {
     font-family: 'Playfair Display', Georgia, serif;
     font-size: 36px;
     font-weight: 600;
-    color: #1f2937;
+    color: var(--retro-blue);
     letter-spacing: -0.03em;
 }
 
 .close-btn {
     width: 32px;
     height: 32px;
-    border: none;
-    background: rgba(139, 92, 246, 0.10);
-    border-radius: 8px;
+    border: 2px solid var(--retro-blue);
+    background: transparent;
+    border-radius: 0;
     font-size: 24px;
-    color: #1f2937;
+    color: var(--retro-blue);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -390,8 +432,8 @@ body {
 }
 
 .close-btn:hover {
-    background: rgba(139, 92, 246, 0.20);
-    color: #1f2937;
+    background: var(--retro-blue);
+    color: #ffffff;
     transform: rotate(90deg);
 }
 
@@ -413,15 +455,19 @@ body {
     font-family: 'Playfair Display', Georgia, serif;
     font-size: 20px;
     font-weight: 600;
-    color: #1f2937;
+    color: var(--retro-blue);
     margin-bottom: 12px;
     letter-spacing: -0.02em;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--retro-blue);
+    padding-bottom: 8px;
+    display: inline-block;
 }
 
 .project-section p {
     font-size: 15px;
-    color: #495057;
-    line-height: 1.6;
+    color: var(--retro-blue);
+    line-height: 1.7;
     margin-bottom: 16px;
 }
 
@@ -432,20 +478,22 @@ body {
 
 .project-section ul li {
     font-size: 15px;
-    color: #495057;
+    color: var(--retro-blue);
     line-height: 1.6;
     padding: 8px 0;
     padding-left: 24px;
     position: relative;
+    border-left: 2px solid var(--retro-blue);
+    margin-left: 8px;
 }
 
 .project-section ul li::before {
-    content: "•";
+    content: "→";
     position: absolute;
-    left: 8px;
-    color: #1f2937;
+    left: 6px;
+    color: var(--retro-blue);
     font-weight: bold;
-    font-size: 20px;
+    font-size: 14px;
 }
 
 .tech-tags {
@@ -456,18 +504,20 @@ body {
 
 .tech-tag {
     padding: 6px 12px;
-    background: rgba(139, 92, 246, 0.10);
-    border: 1px solid rgba(139, 92, 246, 0.20);
-    border-radius: 8px;
+    background: transparent;
+    border: 2px solid var(--retro-blue);
+    border-radius: 0;
     font-size: 13px;
-    font-weight: 500;
-    color: #1f2937;
+    font-weight: 600;
+    color: var(--retro-blue);
     transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .tech-tag:hover {
-    background: rgba(139, 92, 246, 0.15);
-    border-color: rgba(139, 92, 246, 0.30);
+    background: var(--retro-blue);
+    color: #ffffff;
 }
 
 /* Overlay */
@@ -477,7 +527,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(26, 26, 108, 0.5);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
