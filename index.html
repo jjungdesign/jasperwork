@@ -6,30 +6,15 @@
     <title>Jasper Intro - My Projects</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="canvas-container">
-        <!-- Sticky Note Intro Card - Fixed to viewport -->
-        <div class="sticky-note-card project-card" data-project="intro">
-            <div class="card-label">PORTFOLIO 2024</div>
-            <div class="card-content">
-                <img src="wordmark-large-flame.svg" alt="Jasper" class="sticky-note-logo">
-                <p class="sticky-note-text">At Jasper, I designed across Growth and Core IQ—helping new users reach value fast, then scaling the IQ foundation: setup, lifecycle, and governance.</p>
-            </div>
-            <div class="card-expanded-content">
-                <div class="expanded-header">
-                    <img src="wordmark-large-flame.svg" alt="Jasper" class="expanded-logo">
-                    <button class="close-btn" onclick="closeCard(this)">×</button>
-                </div>
-                <div class="expanded-body">
-                    <div class="project-section">
-                        <h3>About</h3>
-                        <p>At Jasper, I designed across Growth and Core IQ—helping new users reach value fast, then scaling the IQ foundation: setup, lifecycle, and governance.</p>
-                    </div>
-                </div>
-            </div>
+        <!-- Jasper Intro - Fixed to viewport -->
+        <div class="intro-section">
+            <img src="wordmark-large-flame.svg" alt="Jasper" class="intro-logo">
+            <p class="intro-text">At Jasper, I designed across Growth and Core IQ—helping new users reach value fast, then scaling the IQ foundation: setup, lifecycle, and governance.</p>
         </div>
 
         <!-- Canvas Area -->
@@ -45,31 +30,60 @@
                 <img src="IQ Agent.svg" alt="IQ Agent" class="card-image-bottom">
                 <div class="card-expanded-content">
                     <div class="expanded-header">
-                        <h2>IQ Agent</h2>
+                        <h2>Agentic IQ Setup</h2>
                         <button class="close-btn" onclick="closeCard(this)">×</button>
                     </div>
                     <div class="expanded-body">
+                        <p class="project-subtitle">Agent-driven onboarding for scalable brand intelligence</p>
+                        
                         <div class="project-section">
-                            <h3>Overview</h3>
-                            <p>A comprehensive analytics platform designed to track and visualize marketing campaign performance across multiple channels. Built with modern web technologies to provide real-time insights and data-driven decision making.</p>
+                            <h3>One-liner</h3>
+                            <p class="highlight-text">Agents create → Humans evaluate → Systems govern</p>
                         </div>
+                        
                         <div class="project-section">
-                            <h3>Key Features</h3>
+                            <h3>The problem</h3>
+                            <p>As Jasper introduced AI agents to generate brand intelligence, setup became faster—but also riskier.</p>
+                            <p>Admins needed clarity, trust, and control without slowing down adoption.</p>
+                        </div>
+                        
+                        <div class="project-section">
+                            <h3>My role</h3>
+                            <p>Product Designer (Growth), partnering closely with PM and Engineering to shape the admin onboarding experience and governance model.</p>
+                        </div>
+                        
+                        <div class="project-section">
+                            <h3>What I focused on</h3>
                             <ul>
-                                <li>Real-time campaign tracking</li>
-                                <li>Multi-channel analytics</li>
-                                <li>Customizable dashboards</li>
-                                <li>Export and reporting tools</li>
+                                <li>Designing an admin-first setup flow where agents create initial IQs users can immediately evaluate</li>
+                                <li>Establishing lightweight review (accept / reject) with clear AI attribution</li>
+                                <li>Defining lifecycle behaviors beyond first-run, including drop-off, re-entry, and refinement</li>
                             </ul>
                         </div>
+                        
                         <div class="project-section">
-                            <h3>Technologies</h3>
+                            <h3>The design approach</h3>
+                            <p>Rather than teaching users what IQ is, the experience drops them into a real workflow.</p>
+                            <p>Automation handles creation; humans stay accountable through simple, intentional decisions.</p>
+                        </div>
+                        
+                        <div class="project-section">
+                            <h3>Outcome</h3>
+                            <ul>
+                                <li>Reduced friction in IQ setup while increasing confidence in AI-generated outputs</li>
+                                <li>Created a scalable foundation for future agentic onboarding and governance patterns</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="project-section">
+                            <h3>Scope & collaborators</h3>
                             <div class="tech-tags">
-                                <span class="tech-tag">React</span>
-                                <span class="tech-tag">TypeScript</span>
-                                <span class="tech-tag">D3.js</span>
-                                <span class="tech-tag">Node.js</span>
+                                <span class="tech-tag">Onboarding</span>
+                                <span class="tech-tag">AI systems</span>
+                                <span class="tech-tag">Governance</span>
+                                <span class="tech-tag">Lifecycle UX</span>
                             </div>
+                            <p class="collaborators">PM · Engineering · Core IQ partners</p>
                         </div>
                     </div>
                 </div>
@@ -151,8 +165,9 @@
                 </div>
             </div>
 
-            <div class="compact-card" style="left: 860px; top: 520px;">
-                <p class="compact-text">I shipped <span class="highlight">+35</span> experiments small and big</p>
+            <div class="compact-card stat-block" style="left: 860px; top: 520px;">
+                <span class="stat-number">+17</span>
+                <p class="stat-label">experiments shipped, small and big</p>
             </div>
             </div>
         </div>

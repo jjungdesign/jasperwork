@@ -24,7 +24,7 @@ const cards = document.querySelectorAll('.project-card');
 canvas.addEventListener('mousedown', function(e) {
     // Skip if clicking on interactive elements
     if (e.target.closest('.project-card') || 
-        e.target.closest('.sticky-note-card') ||
+        e.target.closest('.intro-section') ||
         e.target.closest('button') ||
         expandedCard) {
         return;
@@ -100,9 +100,6 @@ document.addEventListener('mousemove', function(e) {
 // Card dragging and expansion functionality
 cards.forEach(card => {
     // Skip sticky note card - it's fixed position
-    if (card.classList.contains('sticky-note-card')) {
-        return;
-    }
     
     const cardContent = card.querySelector('.card-content');
     
@@ -161,29 +158,8 @@ cards.forEach(card => {
     });
 });
 
-// Handle sticky note card expansion (whole card clickable)
-const stickyNoteCard = document.querySelector('.sticky-note-card');
-if (stickyNoteCard) {
-    stickyNoteCard.addEventListener('click', (e) => {
-        // Don't expand if clicking close button
-        if (e.target.closest('.close-btn')) return;
-        // Don't expand if already expanded
-        if (stickyNoteCard.classList.contains('expanded')) return;
-        
-        e.stopPropagation();
-        setTimeout(() => {
-            if (!hasDragged && !isDragging) {
-                expandCard(stickyNoteCard);
-            }
-            hasDragged = false;
-        }, 10);
-    });
-    
-    stickyNoteCard.addEventListener('mousedown', (e) => {
-        e.stopPropagation();
-        hasDragged = false;
-    });
-}
+// Intro section reference (for hiding behind expanded cards)
+const introSection = document.querySelector('.intro-section');
 
 function expandCard(card) {
     // Close any previously expanded card
@@ -191,32 +167,23 @@ function expandCard(card) {
         closeCard(expandedCard.querySelector('.close-btn'));
     }
     
-    // Check if it's the sticky note card (already fixed)
-    const isStickyNote = card.classList.contains('sticky-note-card');
+    // Store original positioning so we can restore after modal-style expand
+    card.dataset.originalLeft = card.style.left || '';
+    card.dataset.originalTop = card.style.top || '';
+    card.dataset.originalPosition = card.style.position || '';
+    card.dataset.originalTransform = card.style.transform || '';
+    card.dataset.originalZIndex = card.style.zIndex || '';
     
-    if (!isStickyNote) {
-        // Store original positioning so we can restore after modal-style expand
-        card.dataset.originalLeft = card.style.left || '';
-        card.dataset.originalTop = card.style.top || '';
-        card.dataset.originalPosition = card.style.position || '';
-        card.dataset.originalTransform = card.style.transform || '';
-        card.dataset.originalZIndex = card.style.zIndex || '';
-        
-        // Modal-style expand: center in viewport, independent of scroll
-        card.style.position = 'fixed';
-        card.style.left = '50%';
-        card.style.top = '50%';
-        card.style.transform = 'translate(-50%, -50%)';
-        card.style.zIndex = '1100';
-        
-        // Hide sticky note behind the expanded card
-        const stickyNote = document.querySelector('.sticky-note-card');
-        if (stickyNote) {
-            stickyNote.classList.add('hidden-behind');
-        }
-    } else {
-        // For sticky note, just update transform
-        card.style.transform = 'translate(-50%, -50%)';
+    // Modal-style expand: center in viewport, independent of scroll
+    card.style.position = 'fixed';
+    card.style.left = '50%';
+    card.style.top = '50%';
+    card.style.transform = 'translate(-50%, -50%)';
+    card.style.zIndex = '1100';
+    
+    // Hide intro section behind the expanded card
+    if (introSection) {
+        introSection.classList.add('hidden-behind');
     }
     
     // Expand the card
@@ -230,32 +197,23 @@ function expandCard(card) {
 
 function closeCard(closeButton) {
     const card = closeButton.closest('.project-card');
-    const isStickyNote = card.classList.contains('sticky-note-card');
     
-    if (!isStickyNote) {
-        // Restore original position for regular cards
-        const originalLeft = card.dataset.originalLeft ?? '';
-        const originalTop = card.dataset.originalTop ?? '';
-        const originalPosition = card.dataset.originalPosition ?? '';
-        const originalTransform = card.dataset.originalTransform ?? '';
-        const originalZIndex = card.dataset.originalZIndex ?? '';
-        
-        card.style.position = originalPosition;
-        card.style.left = originalLeft;
-        card.style.top = originalTop;
-        card.style.transform = originalTransform;
-        card.style.zIndex = originalZIndex;
-        
-        // Restore sticky note z-index
-        const stickyNote = document.querySelector('.sticky-note-card');
-        if (stickyNote) {
-            stickyNote.classList.remove('hidden-behind');
-        }
-    } else {
-        // For sticky note, restore to top-left
-        card.style.top = '20px';
-        card.style.left = '20px';
-        card.style.transform = 'none';
+    // Restore original position for cards
+    const originalLeft = card.dataset.originalLeft ?? '';
+    const originalTop = card.dataset.originalTop ?? '';
+    const originalPosition = card.dataset.originalPosition ?? '';
+    const originalTransform = card.dataset.originalTransform ?? '';
+    const originalZIndex = card.dataset.originalZIndex ?? '';
+    
+    card.style.position = originalPosition;
+    card.style.left = originalLeft;
+    card.style.top = originalTop;
+    card.style.transform = originalTransform;
+    card.style.zIndex = originalZIndex;
+    
+    // Restore intro section z-index
+    if (introSection) {
+        introSection.classList.remove('hidden-behind');
     }
     
     // Collapse the card
@@ -317,20 +275,14 @@ window.addEventListener('load', () => {
 
 // Animate cards appearing one by one with staggered delays
 function animateCardsEntrance() {
-    // Animate sticky note first
-    const stickyNote = document.querySelector('.sticky-note-card');
-    if (stickyNote) {
-        setTimeout(() => {
-            stickyNote.classList.add('sticky-visible');
-        }, 100);
-    }
+    // Intro section animates via CSS, no JS needed
     
-    // Then animate project cards (excluding sticky note) and compact cards
-    const allCards = document.querySelectorAll('.project-card:not(.sticky-note-card), .compact-card');
+    // Animate project cards and compact cards
+    const allCards = document.querySelectorAll('.project-card, .compact-card');
     
     allCards.forEach((card, index) => {
-        // Stagger the animation with increasing delays (start after sticky note)
-        const delay = 300 + (index * 150); // 300ms delay for sticky note, then 150ms between each card
+        // Stagger the animation with increasing delays
+        const delay = 200 + (index * 150);
         
         setTimeout(() => {
             card.classList.add('card-visible');
