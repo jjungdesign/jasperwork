@@ -181,7 +181,7 @@
             <div class="compact-card stat-block project-card" style="left: 860px; top: 520px;">
                 <div class="card-content">
                     <span class="stat-number">+17</span>
-                    <p class="stat-label">experiments shipped, small and big</p>
+                    <p class="stat-label">experiments shipped</p>
                 </div>
                 <div class="card-expanded-content">
                     <div class="expanded-header">
@@ -219,8 +219,15 @@
 
     </div>
 
-    <!-- Overlay for expanded card - outside canvas-container for proper z-index -->
+    <!-- Overlay for modal - outside canvas-container for proper z-index -->
     <div class="overlay" id="overlay"></div>
+    
+    <!-- Modal - separate from cards -->
+    <div class="modal" id="modal">
+        <div class="modal-content" id="modalContent">
+            <!-- Content will be populated from card when clicked -->
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

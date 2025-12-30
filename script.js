@@ -15,6 +15,8 @@ let cardInitialLeft, cardInitialTop;
 const canvas = document.getElementById('canvas');
 const canvasSpace = document.getElementById('canvasSpace');
 const overlay = document.getElementById('overlay');
+const modal = document.getElementById('modal');
+const modalContent = document.getElementById('modalContent');
 const cards = document.querySelectorAll('.project-card, .compact-card.project-card');
 
 // ============================================
@@ -168,88 +170,75 @@ cards.forEach(card => {
 const introSection = document.querySelector('.intro-section');
 
 function expandCard(card) {
-    // Close any previously expanded card
-    if (expandedCard && expandedCard !== card) {
-        closeCard(expandedCard.querySelector('.close-btn'));
+    // Close any previously opened modal
+    if (expandedCard) {
+        closeModal();
     }
     
-    // Store original positioning so we can restore after modal-style expand
-    card.dataset.originalLeft = card.style.left || '';
-    card.dataset.originalTop = card.style.top || '';
-    card.dataset.originalPosition = card.style.position || '';
-    card.dataset.originalTransform = card.style.transform || '';
-    card.dataset.originalZIndex = card.style.zIndex || '';
+    // Get the expanded content from the card
+    const expandedContent = card.querySelector('.card-expanded-content');
+    if (!expandedContent) return;
     
-    // Modal-style expand: center in viewport, independent of scroll
-    card.style.position = 'fixed';
-    card.style.left = '50%';
-    card.style.top = '50%';
-    card.style.transform = 'translate(-50%, -50%)';
-    card.style.zIndex = '1100';
+    // Clone the content and add to modal
+    const clonedContent = expandedContent.cloneNode(true);
+    modalContent.innerHTML = '';
+    modalContent.appendChild(clonedContent);
     
-    // Hide intro section behind the expanded card
+    // Update close button to use modal close function
+    const closeBtn = modalContent.querySelector('.close-btn') || modalContent.querySelector('.close-btn-square');
+    if (closeBtn) {
+        closeBtn.onclick = closeModal;
+    }
+    
+    // Hide intro section behind the modal
     if (introSection) {
         introSection.classList.add('hidden-behind');
     }
     
-    // Expand the card
-    card.classList.add('expanded');
+    // Show modal and overlay
+    modal.classList.add('active');
     overlay.classList.add('active');
     expandedCard = card;
     
-    // Prevent canvas scrolling when card is expanded
+    // Prevent canvas scrolling when modal is open
     canvas.style.overflow = 'hidden';
 }
 
-function closeCard(closeButton) {
-    const card = closeButton.closest('.project-card') || closeButton.closest('.compact-card.project-card');
+function closeModal() {
+    // Hide modal and overlay
+    modal.classList.remove('active');
+    overlay.classList.remove('active');
     
-    // Restore original position for cards
-    const originalLeft = card.dataset.originalLeft ?? '';
-    const originalTop = card.dataset.originalTop ?? '';
-    const originalPosition = card.dataset.originalPosition ?? '';
-    const originalTransform = card.dataset.originalTransform ?? '';
-    const originalZIndex = card.dataset.originalZIndex ?? '';
-    
-    card.style.position = originalPosition;
-    card.style.left = originalLeft;
-    card.style.top = originalTop;
-    card.style.transform = originalTransform;
-    card.style.zIndex = originalZIndex;
+    // Clear modal content
+    modalContent.innerHTML = '';
     
     // Restore intro section z-index
     if (introSection) {
         introSection.classList.remove('hidden-behind');
     }
     
-    // Collapse the card
-    card.classList.remove('expanded');
-    overlay.classList.remove('active');
     expandedCard = null;
     
     // Re-enable canvas scrolling
     canvas.style.overflow = 'auto';
 }
 
-// Close card when clicking overlay
+// Keep closeCard for backward compatibility (in case any onclick handlers still use it)
+function closeCard(closeButton) {
+    closeModal();
+}
+
+// Close modal when clicking overlay
 overlay.addEventListener('click', () => {
     if (expandedCard) {
-        const closeBtn = expandedCard.querySelector('.close-btn') || expandedCard.querySelector('.close-btn-square');
-        if (closeBtn) {
-            closeCard(closeBtn);
-        }
+        closeModal();
     }
 });
 
-// Close card with Escape key
+// Close modal with Escape key
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        if (expandedCard) {
-            const closeBtn = expandedCard.querySelector('.close-btn') || expandedCard.querySelector('.close-btn-square');
-            if (closeBtn) {
-                closeCard(closeBtn);
-            }
-        }
+    if (e.key === 'Escape' && expandedCard) {
+        closeModal();
     }
 });
 
@@ -295,6 +284,41 @@ function animateCardsEntrance() {
         setTimeout(() => {
             card.classList.add('card-visible');
         }, delay);
+    });
+}
+
+// Matrix effect for stat number on hover
+const statCard = document.querySelector('.compact-card.stat-block');
+const statNumber = document.querySelector('.stat-number');
+
+if (statCard && statNumber) {
+    let matrixInterval = null;
+    
+    statCard.addEventListener('mouseenter', () => {
+        const originalText = statNumber.textContent;
+        let elapsed = 0;
+        const duration = 2000; // 2 seconds
+        const updateInterval = 50; // Update every 50ms for smooth effect
+        
+        matrixInterval = setInterval(() => {
+            elapsed += updateInterval;
+            
+            // Generate random number between 0 and 99
+            const randomNum = Math.floor(Math.random() * 100);
+            statNumber.textContent = `+${randomNum.toString().padStart(2, '0')}`;
+            
+            if (elapsed >= duration) {
+                clearInterval(matrixInterval);
+                statNumber.textContent = originalText; // Restore original
+            }
+        }, updateInterval);
+    });
+    
+    statCard.addEventListener('mouseleave', () => {
+        if (matrixInterval) {
+            clearInterval(matrixInterval);
+            statNumber.textContent = '+17'; // Restore original on leave
+        }
     });
 }
 
