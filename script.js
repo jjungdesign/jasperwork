@@ -75,6 +75,7 @@ document.addEventListener('mouseup', function() {
         isDraggingCard = false;
         draggedCard.style.cursor = 'pointer';
         document.body.style.cursor = '';
+        document.body.style.userSelect = '';
         draggedCard = null;
         // Keep hasDragged true so click handler knows we just dragged
     }
@@ -85,14 +86,17 @@ document.addEventListener('mousemove', function(e) {
     
     e.preventDefault();
     
-    const deltaX = e.pageX - cardStartX;
-    const deltaY = e.pageY - cardStartY;
+    const deltaX = e.clientX - cardStartX;
+    const deltaY = e.clientY - cardStartY;
     
     // Mark as dragged if moved more than 5px
     if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
         hasDragged = true;
     }
     
+    // Cards are positioned absolutely within canvas-space
+    // Mouse delta directly translates to card position change
+    // No need to account for scroll since cards move with the canvas
     draggedCard.style.left = (cardInitialLeft + deltaX) + 'px';
     draggedCard.style.top = (cardInitialTop + deltaY) + 'px';
 });
@@ -124,15 +128,16 @@ cards.forEach(card => {
         isDraggingCard = true;
         draggedCard = card;
         
-        // Store initial mouse position
-        cardStartX = e.pageX;
-        cardStartY = e.pageY;
+        // Store initial mouse position relative to viewport
+        cardStartX = e.clientX;
+        cardStartY = e.clientY;
         
-        // Get current card position relative to canvas-space
-        const currentLeft = parseInt(card.style.left) || 0;
-        const currentTop = parseInt(card.style.top) || 0;
-        cardInitialLeft = currentLeft;
-        cardInitialTop = currentTop;
+        // Get current card position from inline styles (relative to canvas-space)
+        // Parse the left and top values, defaulting to 0 if not set
+        const styleLeft = card.style.left || '';
+        const styleTop = card.style.top || '';
+        cardInitialLeft = styleLeft ? parseFloat(styleLeft) : 0;
+        cardInitialTop = styleTop ? parseFloat(styleTop) : 0;
         
         // Update cursor
         card.style.cursor = 'grabbing';
@@ -143,7 +148,7 @@ cards.forEach(card => {
     // Handle card click - whole card is clickable, expand if we didn't drag
     card.addEventListener('click', (e) => {
         // Don't expand if clicking close button
-        if (e.target.closest('.close-btn')) return;
+        if (e.target.closest('.close-btn') || e.target.closest('.close-btn-square')) return;
         // Don't expand if already expanded
         if (card.classList.contains('expanded')) return;
         
@@ -160,6 +165,73 @@ cards.forEach(card => {
 
 // Intro section reference (for hiding behind expanded cards)
 const introSection = document.querySelector('.intro-section');
+const techPreviewCard = document.getElementById('techPreviewCard');
+const statCard = document.querySelector('.compact-card');
+
+// Handle stat card click for tech preview
+if (statCard) {
+    statCard.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Only open if not dragging canvas
+        if (!isDragging) {
+            openTechPreview();
+        }
+    });
+    
+    // Add basic hover cursor
+    statCard.style.cursor = 'pointer';
+}
+
+function openTechPreview() {
+    if (techPreviewCard) {
+        techPreviewCard.classList.add('active');
+        // document.body.classList.add('panel-open'); // Layout shift removed
+        
+        // Hide intro section if needed
+        if (introSection) introSection.classList.add('hidden-behind');
+
+        // Scroll canvas to center the Card + Panel group
+        // Card is at 860px, Width 280px. Panel is at 1140px, Width 400px.
+        // Total group width = 680px. Group starts at 860px.
+        const groupWidth = 680;
+        const groupStart = 860;
+        const viewportWidth = window.innerWidth;
+        
+        let targetScrollLeft = groupStart - (viewportWidth - groupWidth) / 2;
+        
+        // Ensure we don't scroll past bounds (approx) or below 0
+        if (targetScrollLeft < 0) targetScrollLeft = 0;
+        
+        canvas.scrollTo({
+            left: targetScrollLeft,
+            behavior: 'smooth'
+        });
+    }
+}
+
+function closeTechPreview() {
+    if (techPreviewCard) {
+        techPreviewCard.classList.remove('active');
+        // document.body.classList.remove('panel-open');
+        if (introSection) introSection.classList.remove('hidden-behind');
+
+        // Scroll back to center just the card
+        // Card is at 860px, Width 280px. Center = 1000px.
+        const cardCenter = 860 + (280 / 2);
+        const viewportWidth = window.innerWidth;
+        
+        let targetScrollLeft = cardCenter - (viewportWidth / 2);
+        
+        // Ensure we don't scroll past bounds (approx) or below 0
+        if (targetScrollLeft < 0) targetScrollLeft = 0;
+        
+        canvas.scrollTo({
+            left: targetScrollLeft,
+            behavior: 'smooth'
+        });
+    }
+
+}
 
 function expandCard(card) {
     // Close any previously expanded card
@@ -228,19 +300,29 @@ function closeCard(closeButton) {
 // Close card when clicking overlay
 overlay.addEventListener('click', () => {
     if (expandedCard) {
-        const closeBtn = expandedCard.querySelector('.close-btn');
+        const closeBtn = expandedCard.querySelector('.close-btn') || expandedCard.querySelector('.close-btn-square');
         if (closeBtn) {
             closeCard(closeBtn);
         }
+    }
+    
+    if (techPreviewCard && techPreviewCard.classList.contains('active')) {
+        closeTechPreview();
     }
 });
 
 // Close card with Escape key
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && expandedCard) {
-        const closeBtn = expandedCard.querySelector('.close-btn');
-        if (closeBtn) {
-            closeCard(closeBtn);
+    if (e.key === 'Escape') {
+        if (expandedCard) {
+            const closeBtn = expandedCard.querySelector('.close-btn') || expandedCard.querySelector('.close-btn-square');
+            if (closeBtn) {
+                closeCard(closeBtn);
+            }
+        }
+        
+        if (techPreviewCard && techPreviewCard.classList.contains('active')) {
+            closeTechPreview();
         }
     }
 });
@@ -289,4 +371,5 @@ function animateCardsEntrance() {
         }, delay);
     });
 }
+
 
