@@ -15,7 +15,7 @@ let cardInitialLeft, cardInitialTop;
 const canvas = document.getElementById('canvas');
 const canvasSpace = document.getElementById('canvasSpace');
 const overlay = document.getElementById('overlay');
-const cards = document.querySelectorAll('.project-card');
+const cards = document.querySelectorAll('.project-card, .compact-card.project-card');
 
 // ============================================
 // CANVAS MOUSE PANNING - Simple implementation
@@ -24,6 +24,7 @@ const cards = document.querySelectorAll('.project-card');
 canvas.addEventListener('mousedown', function(e) {
     // Skip if clicking on interactive elements
     if (e.target.closest('.project-card') || 
+        e.target.closest('.compact-card') ||
         e.target.closest('.intro-section') ||
         e.target.closest('button') ||
         expandedCard) {
@@ -165,73 +166,6 @@ cards.forEach(card => {
 
 // Intro section reference (for hiding behind expanded cards)
 const introSection = document.querySelector('.intro-section');
-const techPreviewCard = document.getElementById('techPreviewCard');
-const statCard = document.querySelector('.compact-card');
-
-// Handle stat card click for tech preview
-if (statCard) {
-    statCard.addEventListener('click', (e) => {
-        e.stopPropagation();
-        // Only open if not dragging canvas
-        if (!isDragging) {
-            openTechPreview();
-        }
-    });
-    
-    // Add basic hover cursor
-    statCard.style.cursor = 'pointer';
-}
-
-function openTechPreview() {
-    if (techPreviewCard) {
-        techPreviewCard.classList.add('active');
-        // document.body.classList.add('panel-open'); // Layout shift removed
-        
-        // Hide intro section if needed
-        if (introSection) introSection.classList.add('hidden-behind');
-
-        // Scroll canvas to center the Card + Panel group
-        // Card is at 860px, Width 280px. Panel is at 1140px, Width 400px.
-        // Total group width = 680px. Group starts at 860px.
-        const groupWidth = 680;
-        const groupStart = 860;
-        const viewportWidth = window.innerWidth;
-        
-        let targetScrollLeft = groupStart - (viewportWidth - groupWidth) / 2;
-        
-        // Ensure we don't scroll past bounds (approx) or below 0
-        if (targetScrollLeft < 0) targetScrollLeft = 0;
-        
-        canvas.scrollTo({
-            left: targetScrollLeft,
-            behavior: 'smooth'
-        });
-    }
-}
-
-function closeTechPreview() {
-    if (techPreviewCard) {
-        techPreviewCard.classList.remove('active');
-        // document.body.classList.remove('panel-open');
-        if (introSection) introSection.classList.remove('hidden-behind');
-
-        // Scroll back to center just the card
-        // Card is at 860px, Width 280px. Center = 1000px.
-        const cardCenter = 860 + (280 / 2);
-        const viewportWidth = window.innerWidth;
-        
-        let targetScrollLeft = cardCenter - (viewportWidth / 2);
-        
-        // Ensure we don't scroll past bounds (approx) or below 0
-        if (targetScrollLeft < 0) targetScrollLeft = 0;
-        
-        canvas.scrollTo({
-            left: targetScrollLeft,
-            behavior: 'smooth'
-        });
-    }
-
-}
 
 function expandCard(card) {
     // Close any previously expanded card
@@ -268,7 +202,7 @@ function expandCard(card) {
 }
 
 function closeCard(closeButton) {
-    const card = closeButton.closest('.project-card');
+    const card = closeButton.closest('.project-card') || closeButton.closest('.compact-card.project-card');
     
     // Restore original position for cards
     const originalLeft = card.dataset.originalLeft ?? '';
@@ -305,10 +239,6 @@ overlay.addEventListener('click', () => {
             closeCard(closeBtn);
         }
     }
-    
-    if (techPreviewCard && techPreviewCard.classList.contains('active')) {
-        closeTechPreview();
-    }
 });
 
 // Close card with Escape key
@@ -319,10 +249,6 @@ document.addEventListener('keydown', (e) => {
             if (closeBtn) {
                 closeCard(closeBtn);
             }
-        }
-        
-        if (techPreviewCard && techPreviewCard.classList.contains('active')) {
-            closeTechPreview();
         }
     }
 });

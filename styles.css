@@ -84,11 +84,14 @@ body {
     margin: 0;
 }
 
+/* Card header */
+.card-header {
+    padding: 16px 24px 12px 24px;
+    border-bottom: none;
+}
+
 /* Card label for project cards */
 .card-label {
-    position: absolute;
-    top: 12px;
-    right: 12px;
     font-family: 'Courier New', monospace;
     font-size: 10px;
     font-weight: 700;
@@ -96,6 +99,7 @@ body {
     color: var(--retro-blue);
     opacity: 0.5;
     text-transform: uppercase;
+    text-align: left;
 }
 
 /* Canvas Styles - Retro Print Style */
@@ -233,8 +237,23 @@ body {
 }
 
 .card-content {
-    padding: 24px;
+    padding: 20px 24px 24px 24px;
     height: 100%;
+}
+
+/* Card divider between content and image - only visible in collapsed cards */
+.card-divider {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: #1a1a6c !important;
+    border: none;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+    opacity: 1 !important;
+    z-index: 10;
+    position: relative;
 }
 
 /* Compact Card Style */
@@ -250,6 +269,13 @@ body {
     transform: translateY(20px) scale(0.95);
     transition: all 0.3s ease;
     box-shadow: none;
+    cursor: pointer;
+}
+
+.compact-card.project-card {
+    min-height: 200px;
+    padding: 0;
+    overflow: hidden;
 }
 
 .compact-card.card-visible {
@@ -287,6 +313,7 @@ body {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+    padding: 24px 28px;
 }
 
 .stat-number {
@@ -338,18 +365,27 @@ body {
     display: none;
 }
 
+/* Hide elements when card is expanded */
+.project-card.expanded .card-header,
+.project-card.expanded .card-content,
+.project-card.expanded .card-divider,
+.project-card.expanded .card-image-bottom,
+.project-card.expanded .card-label {
+    display: none !important;
+}
+
 .card-with-image.expanded::after {
     display: none;
 }
 
 .card-title {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 28px;
+    font-weight: 700;
     color: var(--retro-blue);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.04em;
     margin-bottom: 8px;
-    line-height: 1.3;
+    line-height: 1.1;
 }
 
 .card-description {
@@ -366,13 +402,6 @@ body {
     overflow: hidden;
 }
 
-.project-card.expanded .card-content {
-    display: none;
-}
-
-.project-card.expanded .card-label {
-    display: none;
-}
 
 .project-card.expanded .card-expanded-content {
     display: flex;
@@ -392,10 +421,11 @@ body {
 
 .expanded-header h2 {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 36px;
-    font-weight: 600;
+    font-size: 42px;
+    font-weight: 700;
     color: var(--retro-blue);
-    letter-spacing: -0.03em;
+    letter-spacing: -0.05em;
+    line-height: 1.1;
 }
 
 .close-btn {
@@ -462,11 +492,12 @@ body {
 
 .project-section h3 {
     font-family: 'Playfair Display', Georgia, serif;
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 24px;
+    font-weight: 700;
     color: var(--retro-blue);
     margin-bottom: 12px;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
     text-transform: uppercase;
     border-bottom: 2px solid var(--retro-blue);
     padding-bottom: 8px;
@@ -582,151 +613,6 @@ body {
     }
 }
 
-/* Tech Preview Card (Retro Tech Style) - Side Panel */
-.tech-preview-card {
-    position: absolute;
-    top: 0;
-    left: 1140px; /* 860px (card left) + 280px (card width) */
-    width: 400px;
-    height: 100%; /* Full height of canvas space */
-    background: #e8e8e8; /* Match canvas bg */
-    border-left: 2px solid var(--retro-blue);
-    border-right: 2px solid var(--retro-blue); /* Add right border */
-    color: var(--retro-blue);
-    font-family: 'Courier New', monospace;
-    z-index: 100; /* Same as cards */
-    transform: scaleX(0); /* Hidden by collapsing width */
-    transform-origin: left center; /* Expand from left */
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    display: flex !important;
-    flex-direction: column;
-    box-shadow: 10px 0 30px rgba(26, 26, 108, 0.1);
-    /* Subtle grid texture */
-    background-image: 
-        linear-gradient(rgba(26, 26, 108, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(26, 26, 108, 0.05) 1px, transparent 1px);
-    background-size: 20px 20px;
-}
-
-.tech-preview-card.active {
-    transform: scaleX(1);
-}
-
-.tech-header {
-    background: rgba(26, 26, 108, 0.05);
-    padding: 16px 24px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid var(--retro-blue);
-}
-
-.tech-label {
-    font-size: 12px;
-    letter-spacing: 1px;
-    font-weight: 700;
-    text-transform: uppercase;
-}
-
-.tech-close-btn {
-    background: transparent;
-    border: 2px solid var(--retro-blue);
-    color: var(--retro-blue);
-    font-family: inherit;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 11px;
-    padding: 4px 8px;
-    transition: all 0.2s ease;
-}
-
-.tech-close-btn:hover {
-    background: var(--retro-blue);
-    color: #ffffff;
-}
-
-.tech-content {
-    padding: 24px;
-    font-size: 13px;
-    line-height: 1.6;
-    flex: 1;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--retro-blue) transparent;
-}
-
-.tech-content::-webkit-scrollbar {
-    width: 6px;
-}
-
-.tech-content::-webkit-scrollbar-track {
-    background: rgba(26, 26, 108, 0.05);
-}
-
-.tech-content::-webkit-scrollbar-thumb {
-    background: var(--retro-blue);
-}
-
-.tech-row {
-    margin-bottom: 8px;
-}
-
-.tech-prompt {
-    font-weight: bold;
-    margin-right: 8px;
-}
-
-.tech-data {
-    font-weight: bold;
-}
-
-.tech-divider {
-    margin: 16px 0;
-    opacity: 0.3;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.tech-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.tech-item {
-    padding: 4px 8px;
-    border: 1px solid transparent;
-    transition: all 0.2s ease;
-    cursor: default;
-}
-
-.tech-item:hover {
-    border-color: var(--retro-blue);
-    background: rgba(26, 26, 108, 0.05);
-}
-
-.tech-footer {
-    padding: 16px 24px;
-    font-size: 11px;
-    opacity: 0.8;
-    text-align: right;
-    border-top: 2px solid var(--retro-blue);
-    background: rgba(26, 26, 108, 0.05);
-}
-
-.blinking-cursor {
-    display: inline-block;
-    width: 8px;
-    height: 14px;
-    background: var(--retro-blue);
-    vertical-align: middle;
-    animation: blink 1s step-end infinite;
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-}
 
 /* Canvas Layout Shift - Removed as we use scrolling now */
 .canvas {
@@ -953,4 +839,135 @@ body {
         padding: 30px;
         overflow-y: visible; /* Let parent scroll */
     }
+}
+
+/* Windows-style Folder View */
+.windows-folder-view {
+    background: #c0c0c0;
+    padding: 20px;
+    font-family: 'MS Sans Serif', 'Courier New', monospace;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+.windows-folder-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 20px;
+    padding: 10px;
+}
+
+.windows-folder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.1s;
+    border: 2px solid transparent;
+    background: transparent;
+    width: 100px;
+    height: 100px;
+}
+
+.windows-folder:hover {
+    background: rgba(0, 0, 128, 0.1);
+    border: 2px dashed #000080;
+}
+
+.windows-folder:active {
+    background: rgba(0, 0, 128, 0.2);
+    border: 2px solid #000080;
+}
+
+.folder-icon {
+    width: 48px;
+    height: 40px;
+    margin-bottom: 8px;
+    position: relative;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    background: #ffc000;
+    border: 2px solid #000000;
+    box-shadow: 
+        2px 2px 0 #000000,
+        inset 1px 1px 0 #ffffff,
+        inset -1px -1px 0 #808080;
+}
+
+.folder-icon::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -2px;
+    width: 20px;
+    height: 8px;
+    background: #ffc000;
+    border: 2px solid #000000;
+    border-bottom: none;
+    box-shadow: 
+        1px 1px 0 #ffffff,
+        -1px -1px 0 #808080;
+}
+
+.folder-icon::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 8px;
+    height: 8px;
+    background: #000000;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+.folder-name {
+    font-size: 11px;
+    color: #000000;
+    text-align: center;
+    word-break: break-word;
+    line-height: 1.2;
+    max-width: 100px;
+    font-weight: normal;
+}
+
+/* Make compact card work as project card when expanded */
+.compact-card.project-card.expanded {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: min(1200px, calc(100vw - 80px));
+    height: min(800px, calc(100vh - 80px));
+    max-width: 1200px;
+    min-height: min(800px, calc(100vh - 80px));
+    max-height: calc(100vh - 80px);
+    z-index: 1100 !important;
+    cursor: default;
+    border: 2px solid var(--retro-blue);
+    background: #ffffff;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    box-shadow: 12px 12px 0 var(--retro-blue);
+    transition: none !important;
+    animation: modalOpen 0.3s ease-out forwards;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0;
+}
+
+.compact-card.project-card.expanded .card-content {
+    display: none;
+}
+
+.compact-card.project-card.expanded .card-expanded-content {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex: 1;
 }

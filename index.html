@@ -22,7 +22,10 @@
             <div class="canvas-space" id="canvasSpace">
             <!-- Project Cards -->
             <div class="project-card card-with-image" data-project="1" style="left: 500px; top: 70px;">
-                <div class="card-label">PROJECT 01</div>
+                <div class="card-header">
+                    <div class="card-label">PROJECT 01</div>
+                </div>
+                <div class="card-divider"></div>
                 <div class="card-content">
                     <h3 class="card-title">IQ Agent</h3>
                     <p class="card-description">Comprehensive analytics platform for tracking campaign performance</p>
@@ -85,12 +88,16 @@
                 </div>
             </div>
 
-            <div class="project-card" data-project="2" style="left: 860px; top: 70px;">
-                <div class="card-label">PROJECT 02</div>
+            <div class="project-card card-with-image" data-project="2" style="left: 860px; top: 70px;">
+                <div class="card-header">
+                    <div class="card-label">PROJECT 02</div>
+                </div>
+                <div class="card-divider"></div>
                 <div class="card-content">
                     <h3 class="card-title">Sample Canvas Project</h3>
                     <p class="card-description">Comprehensive design system and component library</p>
                 </div>
+                <img src="IQ Agent.svg" alt="Sample Canvas Project" class="card-image-bottom">
                 <div class="card-expanded-content">
                     <div class="expanded-header">
                         <h2>Sample Canvas Project</h2>
@@ -123,12 +130,16 @@
                 </div>
             </div>
 
-            <div class="project-card" data-project="3" style="left: 500px; top: 520px;">
-                <div class="card-label">PROJECT 03</div>
+            <div class="project-card card-with-image" data-project="3" style="left: 500px; top: 520px;">
+                <div class="card-header">
+                    <div class="card-label">PROJECT 03</div>
+                </div>
+                <div class="card-divider"></div>
                 <div class="card-content">
                     <h3 class="card-title">Test Mode for AI Credits</h3>
                     <p class="card-description">Intelligent chatbot with natural language processing</p>
                 </div>
+                <img src="IQ Agent.svg" alt="Test Mode for AI Credits" class="card-image-bottom">
                 <div class="card-expanded-content">
                     <div class="expanded-header">
                         <h2>Test Mode for AI Credits</h2>
@@ -161,9 +172,41 @@
                 </div>
             </div>
 
-            <div class="compact-card stat-block" style="left: 860px; top: 520px;">
-                <span class="stat-number">+17</span>
-                <p class="stat-label">experiments shipped, small and big</p>
+            <div class="compact-card stat-block project-card" style="left: 860px; top: 520px;">
+                <div class="card-content">
+                    <span class="stat-number">+17</span>
+                    <p class="stat-label">experiments shipped, small and big</p>
+                </div>
+                <div class="card-expanded-content">
+                    <div class="expanded-header">
+                        <h2>17 Experiments</h2>
+                        <button class="close-btn" onclick="closeCard(this)">×</button>
+                    </div>
+                    <div class="expanded-body windows-folder-view">
+                        <div class="windows-folder-container">
+                            <div class="windows-folder">
+                                <div class="folder-icon"></div>
+                                <div class="folder-name">Experiment 01</div>
+                            </div>
+                            <div class="windows-folder">
+                                <div class="folder-icon"></div>
+                                <div class="folder-name">Experiment 02</div>
+                            </div>
+                            <div class="windows-folder">
+                                <div class="folder-icon"></div>
+                                <div class="folder-name">Experiment 03</div>
+                            </div>
+                            <div class="windows-folder">
+                                <div class="folder-icon"></div>
+                                <div class="folder-name">Experiment 04</div>
+                            </div>
+                            <div class="windows-folder">
+                                <div class="folder-icon"></div>
+                                <div class="folder-name">Experiment 05</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             </div>
         </div>
