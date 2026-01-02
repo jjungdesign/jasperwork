@@ -379,15 +379,20 @@ if (statCard && statNumber) {
     statCard.addEventListener('mouseenter', () => {
         const originalText = statNumber.textContent;
         let elapsed = 0;
-        const duration = 2000; // 2 seconds
+        const duration = 1000; // 1 second (shorter)
         const updateInterval = 50; // Update every 50ms for smooth effect
+        
+        // Characters to use for matrix effect: digits, letters, and + sign
+        const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ+';
         
         matrixInterval = setInterval(() => {
             elapsed += updateInterval;
             
-            // Generate random number between 0 and 99
-            const randomNum = Math.floor(Math.random() * 100);
-            statNumber.textContent = `+${randomNum.toString().padStart(2, '0')}`;
+            // Generate random 3-character string mixing digits, letters, and + sign
+            const char1 = chars[Math.floor(Math.random() * chars.length)];
+            const char2 = chars[Math.floor(Math.random() * chars.length)];
+            const char3 = chars[Math.floor(Math.random() * chars.length)];
+            statNumber.textContent = `${char1}${char2}${char3}`;
             
             if (elapsed >= duration) {
                 clearInterval(matrixInterval);

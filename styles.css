@@ -21,7 +21,7 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Space Mono', monospace;
     background: var(--bg);
     overflow: hidden;
     height: 100vh;
@@ -44,7 +44,7 @@ body {
     left: 30px;
     width: 380px;
     padding: 24px;
-    background: #e8e8e8;
+    background: #ffffff;
     border: none;
     border-radius: 0;
     z-index: 200;
@@ -85,7 +85,7 @@ body {
     line-height: 1.7;
     color: var(--retro-blue);
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Space Mono', monospace;
     text-transform: none;
     letter-spacing: normal;
     font-weight: 400;
