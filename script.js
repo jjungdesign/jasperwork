@@ -12,6 +12,12 @@ let draggedCard = null;
 let cardStartX, cardStartY;
 let cardInitialLeft, cardInitialTop;
 
+// Cursor trail variables - inspired by guild.ai
+let trailElements = [];
+const maxTrailElements = 30;
+let lastTrailTime = 0;
+const trailThrottle = 16; // ~60fps - create trail element every 16ms
+
 const canvas = document.getElementById('canvas');
 const canvasSpace = document.getElementById('canvasSpace');
 const overlay = document.getElementById('overlay');
@@ -44,19 +50,82 @@ canvas.addEventListener('mousedown', function(e) {
 });
 
 canvas.addEventListener('mousemove', function(e) {
-    if (!isDragging) return;
-    
-    e.preventDefault();
-    
-    const dx = e.pageX - startX;
-    const dy = e.pageY - startY;
-    
-    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
-        hasDragged = true;
+    // Canvas panning logic
+    if (isDragging) {
+        e.preventDefault();
+        
+        const dx = e.pageX - startX;
+        const dy = e.pageY - startY;
+        
+        if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+            hasDragged = true;
+        }
+        
+        canvas.scrollLeft = scrollLeft - dx;
+        canvas.scrollTop = scrollTop - dy;
+        return;
     }
     
-    canvas.scrollLeft = scrollLeft - dx;
-    canvas.scrollTop = scrollTop - dy;
+    // Cursor trail effect - only when not dragging and not over interactive elements
+    if (!e.target.closest('.project-card') && 
+        !e.target.closest('.compact-card') &&
+        !e.target.closest('.intro-section') &&
+        !e.target.closest('button')) {
+        
+        // Throttle trail creation for smoother performance
+        const now = Date.now();
+        if (now - lastTrailTime < trailThrottle) {
+            return;
+        }
+        lastTrailTime = now;
+        
+        // Get mouse position relative to viewport
+        const x = e.clientX;
+        const y = e.clientY;
+        
+        // Snap to grid (40px grid size)
+        const gridSize = 40;
+        const snappedX = Math.round(x / gridSize) * gridSize;
+        const snappedY = Math.round(y / gridSize) * gridSize;
+        
+        // Create a new trail element
+        const trail = document.createElement('div');
+        trail.className = 'cursor-trail';
+        trail.style.left = snappedX + 'px';
+        trail.style.top = snappedY + 'px';
+        
+        document.body.appendChild(trail);
+        trailElements.push(trail);
+        
+        // Limit the number of trail elements
+        if (trailElements.length > maxTrailElements) {
+            const oldTrail = trailElements.shift();
+            if (oldTrail && oldTrail.parentNode) {
+                oldTrail.classList.add('fade-out');
+                setTimeout(() => {
+                    if (oldTrail.parentNode) {
+                        oldTrail.parentNode.removeChild(oldTrail);
+                    }
+                }, 800);
+            }
+        }
+        
+        // Trigger fade out animation after a short delay
+        setTimeout(() => {
+            trail.classList.add('fade-out');
+            
+            // Remove element after animation completes
+            setTimeout(() => {
+                if (trail.parentNode) {
+                    trail.parentNode.removeChild(trail);
+                }
+                const index = trailElements.indexOf(trail);
+                if (index > -1) {
+                    trailElements.splice(index, 1);
+                }
+            }, 800);
+        }, 100);
+    }
 });
 
 canvas.addEventListener('mouseup', function() {
@@ -67,6 +136,19 @@ canvas.addEventListener('mouseup', function() {
 canvas.addEventListener('mouseleave', function() {
     isDragging = false;
     canvas.style.cursor = 'grab';
+    
+    // Clean up trail elements when mouse leaves canvas
+    trailElements.forEach(trail => {
+        if (trail.parentNode) {
+            trail.classList.add('fade-out');
+            setTimeout(() => {
+                if (trail.parentNode) {
+                    trail.parentNode.removeChild(trail);
+                }
+            }, 800);
+        }
+    });
+    trailElements = [];
 });
 
 // ============================================
@@ -317,9 +399,8 @@ if (statCard && statNumber) {
     statCard.addEventListener('mouseleave', () => {
         if (matrixInterval) {
             clearInterval(matrixInterval);
-            statNumber.textContent = '+17'; // Restore original on leave
+            statNumber.textContent = '+15'; // Restore original on leave
         }
     });
 }
-
 
