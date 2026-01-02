@@ -715,13 +715,20 @@ body {
 
 .expanded-visual {
     width: 45%;
-    background-color: #dbeafe; /* Light blueish background */
+    background-color: var(--retro-blue); /* Solid blue background */
     position: relative;
     border-right: 2px solid var(--retro-blue);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+}
+
+.modal-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
 }
 
 .visual-grid-bg {
