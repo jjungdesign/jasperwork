@@ -206,7 +206,6 @@ body {
 /* Card entrance animation */
 .project-card.card-visible {
     opacity: 1;
-    transform: translateY(0) scale(1);
     animation: cardEntrance 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
@@ -221,8 +220,29 @@ body {
     }
 }
 
+/* Apply rotation from data attribute - applied after animation */
+.project-card.card-visible[data-rotation] {
+    transform: rotate(var(--card-rotation, 0deg));
+}
+
+.project-card[data-rotation="-1.5"] {
+    --card-rotation: -1.5deg;
+}
+
+.project-card[data-rotation="2"] {
+    --card-rotation: 2deg;
+}
+
+.project-card[data-rotation="1.2"] {
+    --card-rotation: 1.2deg;
+}
+
+.project-card[data-rotation="-0.8"] {
+    --card-rotation: -0.8deg;
+}
+
 .project-card.card-visible:hover {
-    transform: translate(-2px, -2px);
+    transform: translate(-2px, -2px) rotate(var(--card-rotation, 0deg));
     box-shadow: 8px 8px 0 var(--retro-blue);
     background: #ffffff;
 }
