@@ -43,7 +43,7 @@ body {
     top: 30px;
     left: 30px;
     width: 380px;
-    padding: 24px;
+    padding: 32px 32px 32px 24px;
     background: #ffffff;
     border: none;
     border-radius: 0;
@@ -92,6 +92,16 @@ body {
     text-align: left;
 }
 
+.intro-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--retro-blue);
+    margin: 24px 0 24px 0;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
 /* Card header */
 .card-header {
     padding: 16px 24px 12px 24px;
@@ -117,7 +127,7 @@ body {
     left: 0;
     width: 100%;
     height: 100vh;
-    background-color: #e8e8e8;
+    background-color: #f0f0f0;
     background-image:
         /* Newspaper grain texture */
         url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
@@ -166,14 +176,38 @@ body {
     pointer-events: none;
     z-index: 1;
     border-radius: 0;
-    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translate(0, 0) scale(1);
-    will-change: opacity, transform;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: opacity;
 }
 
 .cursor-trail.fade-out {
     opacity: 0;
-    transform: translate(0, 0) scale(0.8);
+}
+
+/* Background Geometric Shapes - Guild.ai inspired */
+.geo-shape {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.geo-block {
+    position: absolute;
+    background-color: var(--retro-blue);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.geo-shape.visible .geo-block {
+    opacity: inherit;
+    transform: scale(1);
+}
+
+.geo-shape.fade-out .geo-block {
+    opacity: 0 !important;
+    transform: scale(0.9);
+    transition: opacity 1.5s ease-in, transform 1.5s ease-in;
 }
 
 /* Project Card Styles - Retro Print Style */
@@ -359,22 +393,23 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 4px;
-    padding: 12px 16px;
+    gap: 0;
+    padding: 16px 20px;
     perspective: 200px;
 }
 
 .stat-number {
     font-family: 'Press Start 2P', cursive;
-    font-size: 40px;
+    font-size: 64px;
     color: #ffffff;
     line-height: 1;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.04em;
     display: inline-block;
     position: relative;
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
+    margin-bottom: 8px;
 }
 
 .stat-label {
@@ -813,8 +848,8 @@ body {
     align-items: center;
     gap: 12px;
     margin-bottom: 24px;
-    border-top: 1px solid rgba(26, 26, 108, 0.2);
-    padding-top: 24px;
+    border-bottom: 1px solid rgba(26, 26, 108, 0.2);
+    padding-bottom: 24px;
     font-family: 'Courier New', monospace;
     font-size: 13px;
     color: var(--retro-blue);
@@ -859,8 +894,7 @@ body {
     padding-left: 24px;
     font-family: 'Playfair Display', serif;
     font-size: 24px;
-    font-weight: 600; /* Bold/Italic feel */
-    font-style: italic;
+    font-weight: 600;
     color: var(--retro-blue);
     line-height: 1.5;
     margin-bottom: 48px;
@@ -918,6 +952,19 @@ body {
     font-size: 18px;
     line-height: 1.6;
     color: rgba(26, 26, 108, 0.9);
+}
+
+.impact-list {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 18px;
+    line-height: 1.6;
+    color: rgba(26, 26, 108, 0.9);
+    margin-top: 16px;
+    padding-left: 24px;
+}
+
+.impact-list li {
+    margin-bottom: 12px;
 }
 
 /* Responsive adjust for split layout */
@@ -1038,3 +1085,218 @@ body {
 }
 
 /* Compact cards no longer expand - modal is separate */
+
+/* Archive Layout - New Styles */
+.archive-layout {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.modal-content .archive-layout {
+    display: flex !important;
+}
+
+.archive-header-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--retro-blue);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.archive-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Sidebar */
+.archive-sidebar {
+    width: 20%;
+    min-width: 180px;
+    background: var(--retro-blue);
+    border-right: 1px solid rgba(26, 26, 108, 0.1);
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow-y: auto;
+}
+
+.folder-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: #ffffff;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+}
+
+.folder-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.folder-item.active {
+    background: rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+}
+
+.folder-icon-svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+/* Archive Content */
+.archive-content {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.ab-test-header {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(26, 26, 108, 0.1);
+}
+
+.ab-test-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    margin: 0 0 16px 0;
+    color: var(--retro-blue);
+}
+
+.ab-test-meta {
+    display: flex;
+    gap: 12px;
+}
+
+.status-tag, .metric-tag {
+    padding: 6px 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid var(--retro-blue);
+}
+
+.status-tag.win {
+    background: var(--retro-blue);
+    color: #fff;
+}
+
+.ab-comparison {
+    display: flex;
+    gap: 24px;
+    flex: 1;
+}
+
+.variant-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.variant-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--retro-blue);
+    text-align: center;
+}
+
+.variant-image-placeholder {
+    background: #f5f5f7;
+    border: 1px dashed rgba(26, 26, 108, 0.2);
+    flex: 1;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(26, 26, 108, 0.4);
+    font-family: 'Space Mono', monospace;
+}
+
+/* Responsive adjust for archive layout */
+@media (max-width: 900px) {
+    .archive-body {
+        flex-direction: column;
+    }
+    
+    .archive-sidebar {
+        width: 100%;
+        height: 120px;
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 10px;
+        border-right: none;
+        border-bottom: 1px solid rgba(26, 26, 108, 0.1);
+    }
+    
+    .folder-item {
+        min-width: 140px;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .ab-comparison {
+        flex-direction: column;
+    }
+}
+
+.status-tag.neutral {
+    background: #e0e0e0;
+    color: #000;
+    border-color: #999;
+}
+
+.status-tag.lose {
+    background: #ffcccc;
+    color: #cc0000;
+    border-color: #cc0000;
+}
+
+/* Retro Folder Icon */
+.folder-icon {
+    width: 24px;
+    height: 20px;
+    background: #ffc000;
+    border: 2px solid #000;
+    position: relative;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+    margin-right: 4px;
+    flex-shrink: 0;
+}
+
+.folder-icon::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -2px;
+    width: 10px;
+    height: 4px;
+    background: #ffc000;
+    border: 2px solid #000;
+    border-bottom: none;
+}
+
+.folder-icon::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 4px;
+    height: 12px;
+    border-left: 2px solid rgba(255,255,255,0.4);
+}

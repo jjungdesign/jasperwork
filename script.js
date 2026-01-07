@@ -18,6 +18,13 @@ const maxTrailElements = 30;
 let lastTrailTime = 0;
 const trailThrottle = 16; // ~60fps - create trail element every 16ms
 
+// Background geometric shapes - inspired by guild.ai scroll effect
+let lastScrollLeft = 0;
+let lastScrollTop = 0;
+let shapeSpawnThrottle = 150; // Spawn shape every 150ms of scrolling
+let lastShapeTime = 0;
+const maxShapes = 12;
+
 const canvas = document.getElementById('canvas');
 const canvasSpace = document.getElementById('canvasSpace');
 const overlay = document.getElementById('overlay');
@@ -284,6 +291,11 @@ function expandCard(card) {
     
     // Prevent canvas scrolling when modal is open
     canvas.style.overflow = 'hidden';
+
+    // Initialize archive interactions if present
+    if (modalContent.querySelector('.archive-layout')) {
+        initArchiveInteractions();
+    }
 }
 
 function closeModal() {
@@ -409,3 +421,222 @@ if (statCard && statNumber) {
     });
 }
 
+// ============================================
+// BACKGROUND GEOMETRIC SHAPES - Guild.ai inspired
+// ============================================
+
+const shapePatterns = [
+    // L-shape
+    [[0,0], [0,1], [0,2], [1,2]],
+    // Reverse L
+    [[0,0], [0,1], [0,2], [-1,2]],
+    // T-shape
+    [[0,0], [-1,0], [1,0], [0,1]],
+    // Square
+    [[0,0], [1,0], [0,1], [1,1]],
+    // Line horizontal
+    [[0,0], [1,0], [2,0], [3,0]],
+    // Line vertical
+    [[0,0], [0,1], [0,2], [0,3]],
+    // Z-shape
+    [[0,0], [1,0], [1,1], [2,1]],
+    // S-shape
+    [[1,0], [2,0], [0,1], [1,1]],
+    // Plus
+    [[0,1], [1,0], [1,1], [1,2], [2,1]],
+    // Small square
+    [[0,0], [1,0]],
+    // Corner
+    [[0,0], [1,0], [0,1]],
+];
+
+function createGeometricShape() {
+    const canvasSpace = document.getElementById('canvasSpace');
+    if (!canvasSpace) return;
+    
+    const gridSize = 40;
+    const pattern = shapePatterns[Math.floor(Math.random() * shapePatterns.length)];
+    
+    // Random position within visible area + some buffer
+    const canvas = document.getElementById('canvas');
+    const viewportWidth = canvas.clientWidth;
+    const viewportHeight = canvas.clientHeight;
+    const scrollX = canvas.scrollLeft;
+    const scrollY = canvas.scrollTop;
+    
+    // Spawn within viewport with padding
+    const baseX = scrollX + Math.random() * viewportWidth;
+    const baseY = scrollY + Math.random() * viewportHeight;
+    
+    // Snap to grid
+    const snappedX = Math.round(baseX / gridSize) * gridSize;
+    const snappedY = Math.round(baseY / gridSize) * gridSize;
+    
+    // Create container for the shape
+    const shapeContainer = document.createElement('div');
+    shapeContainer.className = 'geo-shape';
+    shapeContainer.style.left = snappedX + 'px';
+    shapeContainer.style.top = snappedY + 'px';
+    
+    // Random opacity variation
+    const opacity = 0.08 + Math.random() * 0.12;
+    
+    // Create each block of the pattern
+    pattern.forEach(([dx, dy], index) => {
+        const block = document.createElement('div');
+        block.className = 'geo-block';
+        block.style.left = (dx * gridSize) + 'px';
+        block.style.top = (dy * gridSize) + 'px';
+        block.style.width = gridSize + 'px';
+        block.style.height = gridSize + 'px';
+        block.style.opacity = opacity;
+        block.style.animationDelay = (index * 50) + 'ms';
+        shapeContainer.appendChild(block);
+    });
+    
+    canvasSpace.appendChild(shapeContainer);
+    
+    // Trigger fade in
+    requestAnimationFrame(() => {
+        shapeContainer.classList.add('visible');
+    });
+    
+    // Fade out and remove after random duration
+    const lifetime = 2000 + Math.random() * 3000;
+    setTimeout(() => {
+        shapeContainer.classList.add('fade-out');
+        setTimeout(() => {
+            if (shapeContainer.parentNode) {
+                shapeContainer.parentNode.removeChild(shapeContainer);
+            }
+        }, 1500);
+    }, lifetime);
+}
+
+// Spawn shapes on scroll
+if (canvas) {
+    canvas.addEventListener('scroll', () => {
+        const now = Date.now();
+        const scrollX = canvas.scrollLeft;
+        const scrollY = canvas.scrollTop;
+        
+        // Calculate scroll delta
+        const deltaX = Math.abs(scrollX - lastScrollLeft);
+        const deltaY = Math.abs(scrollY - lastScrollTop);
+        const scrollDelta = deltaX + deltaY;
+        
+        // Only spawn if scrolling significantly and throttled
+        if (scrollDelta > 20 && now - lastShapeTime > shapeSpawnThrottle) {
+            // Limit number of shapes
+            const existingShapes = document.querySelectorAll('.geo-shape');
+            if (existingShapes.length < maxShapes) {
+                createGeometricShape();
+                lastShapeTime = now;
+            }
+        }
+        
+        lastScrollLeft = scrollX;
+        lastScrollTop = scrollY;
+    });
+    
+    // Also spawn a few shapes initially
+    setTimeout(() => {
+        for (let i = 0; i < 3; i++) {
+            setTimeout(() => createGeometricShape(), i * 300);
+        }
+    }, 500);
+}
+
+
+// ============================================
+// ARCHIVE / EXPERIMENTS INTERACTION
+// ============================================
+
+const experimentsData = {
+    'Q4_Signup_Flow': {
+        title: 'Experiment: Signup Flow Optimization',
+        status: 'WINNER',
+        statusClass: 'win',
+        metric: '+12% Conversion',
+        variantA: 'Original Flow',
+        variantB: 'Simplified Flow'
+    },
+    'Pricing_Modal_V2': {
+        title: 'Experiment: Annual Plan Prominence',
+        status: 'NEUTRAL',
+        statusClass: 'neutral',
+        metric: '+0.5% ARR',
+        variantA: 'Standard Modal',
+        variantB: 'Highlighted Annual'
+    },
+    'Onboarding_Checklist': {
+        title: 'Experiment: New User Checklist',
+        status: 'WINNER',
+        statusClass: 'win',
+        metric: '+8% Activation',
+        variantA: 'No Checklist',
+        variantB: 'Interactive Checklist'
+    },
+    'Template_Gallery': {
+        title: 'Experiment: Gallery Layout Grid',
+        status: 'LOSER',
+        statusClass: 'lose',
+        metric: '-5% Click-through',
+        variantA: 'List View',
+        variantB: 'Masonry Grid'
+    },
+    'Feature_Discovery': {
+        title: 'Experiment: Tooltips for New Feat.',
+        status: 'WINNER',
+        statusClass: 'win',
+        metric: '+15% Feature Usage',
+        variantA: 'Static UI',
+        variantB: 'Guided Tooltips'
+    }
+};
+
+function initArchiveInteractions() {
+    const folderItems = document.querySelectorAll('.modal-content .folder-item');
+    const contentArea = document.querySelector('.modal-content .archive-content');
+    
+    if (!contentArea) return;
+    
+    folderItems.forEach(item => {
+        item.addEventListener('click', () => {
+            // Update active state
+            folderItems.forEach(f => f.classList.remove('active'));
+            item.classList.add('active');
+            
+            // Get data key
+            const folderName = item.querySelector('.folder-name').textContent.trim();
+            const data = experimentsData[folderName];
+            
+            if (data) {
+                // Update content
+                const titleEl = contentArea.querySelector('.ab-test-title');
+                const statusTag = contentArea.querySelector('.status-tag');
+                const metricTag = contentArea.querySelector('.metric-tag');
+                const variantALabel = contentArea.querySelectorAll('.variant-image-placeholder span')[0];
+                const variantBLabel = contentArea.querySelectorAll('.variant-image-placeholder span')[1];
+                
+                // Fade out content briefly
+                contentArea.style.opacity = '0.5';
+                
+                setTimeout(() => {
+                    titleEl.textContent = data.title;
+                    
+                    statusTag.textContent = data.status;
+                    statusTag.className = 'status-tag ' + data.statusClass;
+                    
+                    metricTag.textContent = data.metric;
+                    
+                    variantALabel.textContent = data.variantA;
+                    variantBLabel.textContent = data.variantB;
+                    
+                    // Fade back in
+                    contentArea.style.opacity = '1';
+                }, 150);
+            }
+        });
+    });
+}
