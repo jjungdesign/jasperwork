@@ -43,7 +43,7 @@ body {
     top: 30px;
     left: 30px;
     width: 380px;
-    padding: 32px 32px 32px 24px;
+    padding: 32px;
     background: #ffffff;
     border: none;
     border-radius: 0;
@@ -70,14 +70,19 @@ body {
     z-index: 100;
 }
 
-.intro-logo {
-    width: 100px;
-    height: auto;
-    display: block;
-    padding: 8px 0;
+.intro-logo-container {
     border-top: 1px solid var(--retro-blue);
     border-bottom: 1px solid var(--retro-blue);
-    margin-bottom: 16px;
+    padding: 6px 0;
+    margin: 0 0 16px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.intro-logo {
+    width: 55px;
+    height: auto;
+    display: block;
 }
 
 .intro-text {
@@ -85,7 +90,7 @@ body {
     line-height: 1.7;
     color: var(--retro-blue);
     margin: 0;
-    font-family: 'Space Mono', monospace;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     text-transform: none;
     letter-spacing: normal;
     font-weight: 400;
@@ -97,9 +102,19 @@ body {
     font-size: 48px;
     font-weight: 700;
     color: var(--retro-blue);
-    margin: 24px 0 24px 0;
-    letter-spacing: -0.02em;
+    margin: 24px 0 8px 0;
+    letter-spacing: -0.04em;
     line-height: 1.1;
+}
+
+.intro-subtitle {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--retro-blue);
+    margin: 0 0 24px 0;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 /* Card header */
@@ -373,6 +388,7 @@ body {
     line-height: 1.4;
     margin: 0;
     text-align: left;
+    letter-spacing: -0.03em;
 }
 
 .compact-text .highlight {
@@ -420,6 +436,7 @@ body {
     line-height: 1.4;
     margin: 0;
     text-align: left;
+    letter-spacing: -0.02em;
 }
 
 .card-icon {
@@ -484,11 +501,19 @@ body {
     line-height: 1.1;
 }
 
+.scramble-text {
+    font-family: 'Doto', sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    word-spacing: -0.1em;
+    display: inline-block;
+}
+
 .card-description {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 14px;
     color: var(--retro-blue);
-    opacity: 0.7;
-    line-height: 1.6;
+    line-height: 1.4;
 }
 
 /* Expanded content is now in modal, hidden in cards */
@@ -770,7 +795,9 @@ body {
 
 .expanded-visual {
     width: 45%;
-    background-color: var(--retro-blue); /* Solid blue background */
+    background-color: #e5e5e5;
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.15) 1px, transparent 1px);
+    background-size: 16px 16px;
     position: relative;
     border-right: 2px solid var(--retro-blue);
     display: flex;
@@ -806,6 +833,7 @@ body {
     text-align: center;
     padding: 20px;
     opacity: 0.8;
+    letter-spacing: -0.04em;
 }
 
 .expanded-details {
@@ -850,7 +878,7 @@ body {
     margin-bottom: 24px;
     border-bottom: 1px solid rgba(26, 26, 108, 0.2);
     padding-bottom: 24px;
-    font-family: 'Courier New', monospace;
+    font-family: 'Space Mono', monospace;
     font-size: 13px;
     color: var(--retro-blue);
     font-weight: 600;
@@ -868,6 +896,7 @@ body {
     margin-bottom: 24px;
     line-height: 1.1;
     font-weight: 700;
+    letter-spacing: -0.04em;
 }
 
 /* Tags */
@@ -881,7 +910,7 @@ body {
     border: 1px solid var(--retro-blue);
     color: var(--retro-blue);
     padding: 6px 12px;
-    font-family: 'Courier New', monospace;
+    font-family: 'Space Mono', monospace;
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
@@ -898,6 +927,7 @@ body {
     color: var(--retro-blue);
     line-height: 1.5;
     margin-bottom: 48px;
+    letter-spacing: -0.03em;
 }
 
 /* Meta Grid */
@@ -916,7 +946,7 @@ body {
 }
 
 .meta-label {
-    font-family: 'Courier New', monospace;
+    font-family: 'Space Mono', monospace;
     font-size: 12px;
     color: rgba(26, 26, 108, 0.6);
     font-weight: 700;
@@ -925,7 +955,7 @@ body {
 }
 
 .meta-value {
-    font-family: 'Courier New', monospace;
+    font-family: 'Space Mono', monospace;
     font-size: 14px;
     color: var(--retro-blue);
     font-weight: 700;
@@ -938,7 +968,7 @@ body {
 }
 
 .section-label {
-    font-family: 'Courier New', monospace;
+    font-family: 'Space Mono', monospace;
     font-size: 13px;
     font-weight: 700;
     color: var(--retro-blue);
@@ -948,16 +978,16 @@ body {
 }
 
 .content-section p {
-    font-family: 'Times New Roman', Times, serif; /* Clean Serif for body */
-    font-size: 18px;
-    line-height: 1.6;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
     color: rgba(26, 26, 108, 0.9);
 }
 
 .impact-list {
-    font-family: 'Times New Roman', Times, serif;
-    font-size: 18px;
-    line-height: 1.6;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
     color: rgba(26, 26, 108, 0.9);
     margin-top: 16px;
     padding-left: 24px;
@@ -993,7 +1023,7 @@ body {
 .windows-folder-view {
     background: #c0c0c0;
     padding: 20px;
-    font-family: 'MS Sans Serif', 'Courier New', monospace;
+    font-family: 'MS Sans Serif', 'Space Mono', monospace;
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
     image-rendering: crisp-edges;
@@ -1098,13 +1128,25 @@ body {
     display: flex !important;
 }
 
+.archive-sidebar-header {
+    padding: 24px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 12px;
+}
+
 .archive-header-title {
     font-family: 'Space Mono', monospace;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
-    color: var(--retro-blue);
-    letter-spacing: 0.05em;
+    color: #ffffff;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
+}
+
+.archive-content .close-btn-square {
+    position: absolute;
+    top: 20px;
+    right: 20px;
 }
 
 .archive-body {
@@ -1129,13 +1171,17 @@ body {
 .folder-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 20px;
+    gap: 12px;
+    padding: 12px 20px;
     cursor: pointer;
     transition: background 0.2s;
     color: #ffffff;
     font-family: 'Space Mono', monospace;
-    font-size: 12px;
+    font-size: 13px;
+}
+
+.archive-sidebar .folder-name {
+    color: #ffffff;
 }
 
 .folder-item:hover {
@@ -1161,6 +1207,7 @@ body {
     background: #fff;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .ab-test-header {
@@ -1174,6 +1221,7 @@ body {
     font-size: 32px;
     margin: 0 0 16px 0;
     color: var(--retro-blue);
+    letter-spacing: -0.04em;
 }
 
 .ab-test-meta {
@@ -1268,24 +1316,24 @@ body {
 }
 
 /* Retro Folder Icon */
-.folder-icon {
-    width: 24px;
-    height: 20px;
+.archive-sidebar .folder-icon {
+    width: 48px;
+    height: 40px;
     background: #ffc000;
     border: 2px solid #000;
     position: relative;
-    box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
-    margin-right: 4px;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+    margin-right: 8px;
     flex-shrink: 0;
 }
 
-.folder-icon::before {
+.archive-sidebar .folder-icon::before {
     content: '';
     position: absolute;
-    top: -4px;
+    top: -6px;
     left: -2px;
-    width: 10px;
-    height: 4px;
+    width: 18px;
+    height: 6px;
     background: #ffc000;
     border: 2px solid #000;
     border-bottom: none;

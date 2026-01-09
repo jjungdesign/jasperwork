@@ -553,45 +553,45 @@ if (canvas) {
 // ============================================
 
 const experimentsData = {
-    'Q4_Signup_Flow': {
-        title: 'Experiment: Signup Flow Optimization',
+    'Sign up flow': {
+        title: 'Sign up flow',
         status: 'WINNER',
         statusClass: 'win',
         metric: '+12% Conversion',
-        variantA: 'Original Flow',
-        variantB: 'Simplified Flow'
+        variantA: 'Control',
+        variantB: 'Variant B'
     },
-    'Pricing_Modal_V2': {
-        title: 'Experiment: Annual Plan Prominence',
-        status: 'NEUTRAL',
-        statusClass: 'neutral',
-        metric: '+0.5% ARR',
-        variantA: 'Standard Modal',
-        variantB: 'Highlighted Annual'
-    },
-    'Onboarding_Checklist': {
-        title: 'Experiment: New User Checklist',
+    'Ask Jasper': {
+        title: 'Ask Jasper',
         status: 'WINNER',
         statusClass: 'win',
-        metric: '+8% Activation',
-        variantA: 'No Checklist',
-        variantB: 'Interactive Checklist'
+        metric: '+8% Engagement',
+        variantA: 'Control',
+        variantB: 'Variant B'
     },
-    'Template_Gallery': {
-        title: 'Experiment: Gallery Layout Grid',
-        status: 'LOSER',
-        statusClass: 'lose',
-        metric: '-5% Click-through',
-        variantA: 'List View',
-        variantB: 'Masonry Grid'
-    },
-    'Feature_Discovery': {
-        title: 'Experiment: Tooltips for New Feat.',
+    'Suggestion Chip': {
+        title: 'Suggestion Chip',
         status: 'WINNER',
         statusClass: 'win',
-        metric: '+15% Feature Usage',
-        variantA: 'Static UI',
-        variantB: 'Guided Tooltips'
+        metric: '+15% Click-through',
+        variantA: 'Control',
+        variantB: 'Variant B'
+    },
+    'Get started hero': {
+        title: 'Get started hero',
+        status: 'WINNER',
+        statusClass: 'win',
+        metric: '+10% Activation',
+        variantA: 'Control',
+        variantB: 'Variant B'
+    },
+    'Zero to Project': {
+        title: 'Zero to Project',
+        status: 'WINNER',
+        statusClass: 'win',
+        metric: '+18% Completion',
+        variantA: 'Control',
+        variantB: 'Variant B'
     }
 };
 
@@ -640,3 +640,60 @@ function initArchiveInteractions() {
         });
     });
 }
+
+// ============================================
+// SCRAMBLE TEXT EFFECT ON HOVER
+// ============================================
+
+const scrambleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+document.querySelectorAll('.project-card').forEach(card => {
+    const scrambleElements = card.querySelectorAll('.scramble-text');
+    
+    scrambleElements.forEach(el => {
+        const originalText = el.dataset.text || el.textContent;
+        let scrambleInterval = null;
+        let settledIndices = [];
+        
+        card.addEventListener('mouseenter', () => {
+            let iterations = 0;
+            const totalIterations = 12; // ~500ms at 40ms intervals
+            settledIndices = [];
+            
+            // Assign random settle times to each letter
+            const settleAt = originalText.split('').map(() => 
+                Math.floor(Math.random() * (totalIterations - 2)) + 2
+            );
+            
+            scrambleInterval = setInterval(() => {
+                el.textContent = originalText
+                    .split('')
+                    .map((char, index) => {
+                        // Keep spaces as spaces
+                        if (char === ' ') return ' ';
+                        // If this letter should settle, show original
+                        if (iterations >= settleAt[index]) {
+                            return originalText[index];
+                        }
+                        // Otherwise scramble
+                        return scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
+                    })
+                    .join('');
+                
+                iterations++;
+                
+                if (iterations >= totalIterations) {
+                    clearInterval(scrambleInterval);
+                    el.textContent = originalText;
+                }
+            }, 40);
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            if (scrambleInterval) {
+                clearInterval(scrambleInterval);
+            }
+            el.textContent = originalText;
+        });
+    });
+});
