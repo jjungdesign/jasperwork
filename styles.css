@@ -497,6 +497,11 @@ body {
     transform-origin: center center;
 }
 
+/* Sample Project card image - lower by 20px */
+[data-project="2"] .card-image-bottom {
+    transform: scale(0.7) translateY(20px);
+}
+
 .card-with-image.expanded .card-image-bottom {
     display: none;
 }
