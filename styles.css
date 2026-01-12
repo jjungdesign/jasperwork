@@ -1156,7 +1156,7 @@ body {
 .folder-name {
     font-size: 11px;
     color: #000000;
-    text-align: center;
+    text-align: left;
     word-break: break-word;
     line-height: 1.2;
     max-width: 100px;
@@ -1202,6 +1202,8 @@ body {
     display: flex;
     flex: 1;
     overflow: hidden;
+    min-width: 0;
+    max-width: 100%;
 }
 
 /* Sidebar */
@@ -1251,26 +1253,47 @@ body {
 /* Archive Content */
 .archive-content {
     flex: 1;
-    padding: 40px;
+    padding: 48px 60px 40px 60px;
     overflow-y: auto;
+    overflow-x: hidden;
     background: #fff;
     display: flex;
     flex-direction: column;
     position: relative;
+    min-width: 0;
+}
+
+/* Experiment Panels */
+.experiment-panel {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+}
+
+.experiment-panel.active {
+    display: flex;
 }
 
 .ab-test-header {
-    margin-bottom: 32px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid rgba(26, 26, 108, 0.1);
+    margin-bottom: 24px;
 }
 
 .ab-test-title {
     font-family: 'Playfair Display', serif;
-    font-size: 32px;
-    margin: 0 0 16px 0;
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0 0 12px 0;
     color: var(--retro-blue);
     letter-spacing: -0.04em;
+    line-height: 1.1;
+}
+
+.ab-test-subheading {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    color: var(--retro-blue);
+    margin: 0;
+    line-height: 1.5;
 }
 
 .ab-test-meta {
@@ -1279,56 +1302,308 @@ body {
 }
 
 .status-tag, .metric-tag {
-    padding: 6px 12px;
+    padding: 8px 16px;
     font-family: 'Space Mono', monospace;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
-    border: 1px solid var(--retro-blue);
+    letter-spacing: 0.05em;
+    border: 2px solid var(--retro-blue);
 }
 
 .status-tag.win {
-    background: var(--retro-blue);
-    color: #fff;
+    background: #fff;
+    color: var(--retro-blue);
+    border-color: var(--retro-blue);
 }
 
 .ab-comparison {
     display: flex;
     gap: 24px;
-    flex: 1;
+    align-items: stretch;
+    margin-bottom: 24px;
+    width: 100%;
+    min-width: 0;
 }
 
-.variant-col {
+.variant-col-equal {
     flex: 1;
+    position: relative;
     display: flex;
-    flex-direction: column;
-    gap: 12px;
+    align-items: stretch;
+    min-width: 0;
+    max-width: 50%;
+}
+
+.variant-col-equal .variant-image-placeholder {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+}
+
+.variant-image-placeholder {
+    position: relative;
+}
+
+.ab-bottom-row {
+    display: flex;
+    gap: 24px;
+    width: 100%;
+}
+
+.variant-b-full {
+    width: 100%;
+    aspect-ratio: auto;
+    background: #f5f5f7;
+    border: 3px solid var(--retro-blue) !important;
+    display: flex;
+    align-items: stretch;
+    position: relative;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+}
+
+.variant-b-full::after {
+    display: none;
+}
+
+.variant-b-full .variant-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0 !important;
+    border: none;
+    display: block;
+}
+
+.variant-b-full .variant-label {
+    top: 0;
+    left: 0;
+    background: var(--retro-blue);
+    color: #fff;
+    font-weight: 700;
+    z-index: 11;
+}
+
+/* Baseline A Style */
+.variant-a-style {
+    background: #f5f5f7 !important;
+    border: 3px solid #888 !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+    position: relative;
+    display: flex;
+    align-items: stretch;
+}
+
+.variant-a-style::after {
+    display: none;
+}
+
+.variant-a-style .variant-label {
+    top: 0;
+    left: 0;
+    background: #888;
+    color: #fff;
+    font-weight: 700;
+    z-index: 11;
+}
+
+.variant-a-style .variant-image {
+    width: 104%;
+    height: 104%;
+    object-fit: cover;
+    display: block;
+    margin: -2%;
+}
+
+/* Ask Jasper baseline image - larger */
+[data-panel="askjasper"] .variant-a-style .variant-image {
+    width: 108%;
+    height: 108%;
+    margin: -4%;
 }
 
 .variant-label {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 2;
     font-family: 'Space Mono', monospace;
-    font-size: 14px;
+    font-size: 11px;
     font-weight: 600;
     color: var(--retro-blue);
-    text-align: center;
+    background: rgba(248, 248, 252, 0.95);
+    padding: 6px 10px;
+    letter-spacing: 0.03em;
 }
 
 .variant-image-placeholder {
     background: #f5f5f7;
     border: 1px dashed rgba(26, 26, 108, 0.2);
-    flex: 1;
-    min-height: 300px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: rgba(26, 26, 108, 0.4);
     font-family: 'Space Mono', monospace;
     overflow: hidden;
+    aspect-ratio: 16 / 10;
+    border-radius: 8px;
 }
 
 .variant-video {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    background: #f5f5f7;
+    border-radius: 0;
+}
+
+/* A/B Test Metrics Section */
+.ab-metrics-section {
+    display: flex;
+    gap: 12px;
+    flex: 0 0 auto;
+}
+
+.ab-metric-card {
+    background: #f8f8fc;
+    border: 1px solid rgba(26, 26, 108, 0.1);
+    padding: 16px 20px;
+    min-width: 100px;
+}
+
+.ab-metric-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--retro-blue);
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+}
+
+.ab-metric-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--retro-blue);
+    letter-spacing: -0.02em;
+}
+
+.ab-metric-value.positive {
+    color: var(--retro-blue);
+}
+
+.ab-metric-value.negative {
+    color: #cc0000;
+}
+
+.ab-hypothesis-card {
+    background: #f8f8fc;
+    border: 1px solid rgba(26, 26, 108, 0.1);
+    padding: 20px 24px;
+    flex: 2;
+}
+
+.ab-hypothesis-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--retro-blue);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.ab-solution-card {
+    background: #f8f8fc;
+    border: 1px solid rgba(26, 26, 108, 0.1);
+    padding: 20px 24px;
+    width: 100%;
+    margin-top: 24px;
+}
+
+.ab-solution-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--retro-blue);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Zoom Modal */
+.zoom-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+.zoom-modal.active {
+    display: flex;
+}
+
+.zoom-modal-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.zoom-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.zoom-content video,
+.zoom-content img {
+    max-width: 100%;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+.zoom-close-btn {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: #fff;
+    font-size: 32px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    font-family: 'Space Mono', monospace;
+    line-height: 1;
+    padding: 0;
+}
+
+.zoom-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.8);
 }
 
 /* Responsive adjust for archive layout */
@@ -1373,12 +1648,12 @@ body {
 
 /* Retro Folder Icon */
 .archive-sidebar .folder-icon {
-    width: 48px;
-    height: 40px;
+    width: 28px;
+    height: 22px;
     background: #ffc000;
     border: 2px solid #000;
     position: relative;
-    box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+    box-shadow: 1px 1px 0 rgba(0,0,0,0.3);
     margin-right: 8px;
     flex-shrink: 0;
 }
@@ -1386,10 +1661,10 @@ body {
 .archive-sidebar .folder-icon::before {
     content: '';
     position: absolute;
-    top: -6px;
+    top: -4px;
     left: -2px;
-    width: 18px;
-    height: 6px;
+    width: 12px;
+    height: 4px;
     background: #ffc000;
     border: 2px solid #000;
     border-bottom: none;

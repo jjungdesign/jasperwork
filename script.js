@@ -601,41 +601,43 @@ function initArchiveInteractions() {
     
     if (!contentArea) return;
     
+    // Make sure first folder and panel are active on modal open
+    const allPanels = contentArea.querySelectorAll('.experiment-panel');
+    const firstFolder = folderItems[0];
+    const firstPanel = allPanels[0];
+    
+    // Reset all to inactive, then activate first
+    folderItems.forEach(f => f.classList.remove('active'));
+    allPanels.forEach(p => p.classList.remove('active'));
+    
+    if (firstFolder) firstFolder.classList.add('active');
+    if (firstPanel) firstPanel.classList.add('active');
+    
+    // Set up click handlers for folder switching
     folderItems.forEach(item => {
-        item.addEventListener('click', () => {
-            // Update active state
+        item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            // Update folder active states
             folderItems.forEach(f => f.classList.remove('active'));
             item.classList.add('active');
             
-            // Get data key
-            const folderName = item.querySelector('.folder-name').textContent.trim();
-            const data = experimentsData[folderName];
+            // Get experiment ID from data attribute
+            const experimentId = item.getAttribute('data-experiment');
             
-            if (data) {
-                // Update content
-                const titleEl = contentArea.querySelector('.ab-test-title');
-                const statusTag = contentArea.querySelector('.status-tag');
-                const metricTag = contentArea.querySelector('.metric-tag');
-                const variantALabel = contentArea.querySelectorAll('.variant-image-placeholder span')[0];
-                const variantBLabel = contentArea.querySelectorAll('.variant-image-placeholder span')[1];
+            // Update experiment panel visibility
+            allPanels.forEach(panel => panel.classList.remove('active'));
+            
+            const targetPanel = contentArea.querySelector(`.experiment-panel[data-panel="${experimentId}"]`);
+            if (targetPanel) {
+                targetPanel.classList.add('active');
                 
-                // Fade out content briefly
-                contentArea.style.opacity = '0.5';
-                
-                setTimeout(() => {
-                    titleEl.textContent = data.title;
-                    
-                    statusTag.textContent = data.status;
-                    statusTag.className = 'status-tag ' + data.statusClass;
-                    
-                    metricTag.textContent = data.metric;
-                    
-                    variantALabel.textContent = data.variantA;
-                    variantBLabel.textContent = data.variantB;
-                    
-                    // Fade back in
-                    contentArea.style.opacity = '1';
-                }, 150);
+                // Restart any videos in the panel
+                const videos = targetPanel.querySelectorAll('video');
+                videos.forEach(video => {
+                    video.currentTime = 0;
+                    video.play().catch(() => {});
+                });
             }
         });
     });
@@ -697,3 +699,51 @@ document.querySelectorAll('.project-card').forEach(card => {
         });
     });
 });
+
+// Zoom View Functions
+function openZoomView(element, type) {
+    const zoomModal = document.getElementById('zoomModal');
+    const zoomContent = document.getElementById('zoomContent');
+    
+    if (!zoomModal || !zoomContent) return;
+    
+    // Clear previous content
+    zoomContent.innerHTML = '';
+    
+    // Clone the video or create content based on type
+    if (type === 'variant') {
+        const video = element.querySelector('.variant-video');
+        if (video) {
+            const clonedVideo = video.cloneNode(true);
+            clonedVideo.removeAttribute('style');
+            clonedVideo.style.width = 'auto';
+            clonedVideo.style.height = 'auto';
+            clonedVideo.style.maxWidth = '100%';
+            clonedVideo.style.maxHeight = '90vh';
+            zoomContent.appendChild(clonedVideo);
+        }
+    } else {
+        // For baseline, clone the image
+        const image = element.querySelector('.variant-image');
+        if (image) {
+            const clonedImage = image.cloneNode(true);
+            clonedImage.style.width = 'auto';
+            clonedImage.style.height = 'auto';
+            clonedImage.style.maxWidth = '100%';
+            clonedImage.style.maxHeight = '90vh';
+            zoomContent.appendChild(clonedImage);
+        }
+    }
+    
+    zoomModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeZoomView() {
+    const zoomModal = document.getElementById('zoomModal');
+    if (zoomModal) {
+        zoomModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+

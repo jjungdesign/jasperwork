@@ -286,23 +286,23 @@
                             <div class="archive-sidebar-header">
                                 <div class="archive-header-title">EXPERIMENTS ARCHIVE</div>
                             </div>
-                            <div class="folder-item active">
+                            <div class="folder-item active" data-experiment="signup">
                                 <div class="folder-icon"></div>
-                                <span class="folder-name">Sign up flow</span>
+                                <span class="folder-name">Progressive Signup</span>
                             </div>
-                            <div class="folder-item">
+                            <div class="folder-item" data-experiment="askjasper">
                                 <div class="folder-icon"></div>
                                 <span class="folder-name">Ask Jasper</span>
                             </div>
-                            <div class="folder-item">
+                            <div class="folder-item" data-experiment="suggestion">
                                 <div class="folder-icon"></div>
                                 <span class="folder-name">Suggestion Chip</span>
                             </div>
-                            <div class="folder-item">
+                            <div class="folder-item" data-experiment="hero">
                                 <div class="folder-icon"></div>
                                 <span class="folder-name">Get started hero</span>
                             </div>
-                            <div class="folder-item">
+                            <div class="folder-item" data-experiment="zerotoproject">
                                 <div class="folder-icon"></div>
                                 <span class="folder-name">Zero to Project</span>
                             </div>
@@ -311,28 +311,223 @@
                         <!-- Right Content: A/B Test View -->
                         <div class="archive-content">
                             <button class="close-btn-square" onclick="closeCard(this)">×</button>
-                            <div class="ab-test-header">
-                                <h2 class="ab-test-title">Sign up flow</h2>
-                                <div class="ab-test-meta">
-                                    <span class="status-tag win">WINNER</span>
-                                    <span class="metric-tag">+12% Conversion</span>
+                            
+                            <!-- Experiment: Sign up flow -->
+                            <div class="experiment-panel active" data-panel="signup">
+                                <div class="ab-test-header">
+                                    <h2 class="ab-test-title">Progressive Signup</h2>
+                                    <p class="ab-test-subheading">A progressive, chat-based signup designed to reduce friction and guide users into the right first experience.</p>
+                                </div>
+                                
+                                <div class="ab-comparison">
+                                    <div class="variant-col variant-col-equal">
+                                        <div class="variant-image-placeholder variant-a-style" onclick="openZoomView(this, 'baseline')" style="cursor: pointer;">
+                                            <div class="variant-label">CONTROL (A)</div>
+                                            <img src="oldsignup.jpg" alt="Baseline signup" class="variant-image">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="variant-col variant-col-equal">
+                                        <div class="variant-image-placeholder variant-b-full" onclick="openZoomView(this, 'variant')" style="cursor: pointer;">
+                                            <div class="variant-label">VARIANT (B)</div>
+                                            <video autoplay loop muted playsinline class="variant-video">
+                                                <source src="signup.mp4" type="video/mp4">
+                                            </video>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="ab-bottom-row">
+                                    <div class="ab-hypothesis-card">
+                                        <div class="ab-metric-label">HYPOTHESIS</div>
+                                        <p class="ab-hypothesis-text">A guided signup will reduce friction and drive more intentional user input, improving trial quality.</p>
+                                    </div>
+                                    
+                                    <div class="ab-metrics-section">
+                                        <div class="ab-metric-card">
+                                            <div class="ab-metric-label">SURVEY COMPLETION</div>
+                                            <div class="ab-metric-value positive">+10%</div>
+                                        </div>
+                                        <div class="ab-metric-card">
+                                            <div class="ab-metric-label">TRIAL SIGNUP</div>
+                                            <div class="ab-metric-value positive">+8%</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="ab-comparison">
-                                <div class="variant-col">
-                                    <div class="variant-label">CONTROL (A)</div>
-                                    <div class="variant-image-placeholder">
-                                        <!-- Placeholder for Control Image -->
-                                        <span>Control</span>
+                            <!-- Experiment: Ask Jasper -->
+                            <div class="experiment-panel" data-panel="askjasper">
+                                <div class="ab-test-header">
+                                    <h2 class="ab-test-title">Ask Jasper</h2>
+                                    <p class="ab-test-subheading">Improving discoverability of Ask Jasper by simplifying how users add and edit content in the Editor.</p>
+                                </div>
+                                
+                                <div class="ab-comparison">
+                                    <div class="variant-col variant-col-equal">
+                                        <div class="variant-image-placeholder variant-a-style" onclick="openZoomView(this, 'baseline')" style="cursor: pointer;">
+                                            <div class="variant-label">CONTROL (A)</div>
+                                            <img src="oldaskjasper.jpg" alt="Baseline Ask Jasper" class="variant-image">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="variant-col variant-col-equal">
+                                        <div class="variant-image-placeholder variant-b-full" onclick="openZoomView(this, 'variant')" style="cursor: pointer;">
+                                            <div class="variant-label">VARIANT (B)</div>
+                                            <video autoplay loop muted playsinline class="variant-video">
+                                                <source src="askjasper.mp4" type="video/mp4">
+                                            </video>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="variant-col">
-                                    <div class="variant-label">TEST (B)</div>
-                                    <div class="variant-image-placeholder">
-                                        <video autoplay loop muted playsinline class="variant-video">
-                                            <source src="signup.mp4" type="video/mp4">
-                                        </video>
+                                
+                                <div class="ab-bottom-row">
+                                    <div class="ab-hypothesis-card">
+                                        <div class="ab-metric-label">HYPOTHESIS</div>
+                                        <p class="ab-hypothesis-text">Making Ask Jasper visible at content entry points will clarify create vs. edit actions and drive more intentional AI usage.</p>
+                                    </div>
+                                    
+                                    <div class="ab-metrics-section">
+                                        <div class="ab-metric-card">
+                                            <div class="ab-metric-label">ASK JASPER USAGE</div>
+                                            <div class="ab-metric-value positive">+22%</div>
+                                        </div>
+                                        <div class="ab-metric-card">
+                                            <div class="ab-metric-label">EDITOR COMPLETION</div>
+                                            <div class="ab-metric-value positive">+31%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Experiment: Suggestion Chip -->
+                            <div class="experiment-panel" data-panel="suggestion">
+                                <div class="ab-test-header">
+                                    <h2 class="ab-test-title">Suggestion Chip</h2>
+                                    <p class="ab-test-subheading">Improving early activation and habit formation by surfacing contextual suggestions in the Editor that guide users to research, remix content, and refine Brand Voice.</p>
+                                </div>
+                                
+                                <div class="ab-comparison">
+                                    <div class="variant-col variant-col-equal">
+                                        <div class="variant-image-placeholder variant-a-style" onclick="openZoomView(this, 'baseline')" style="cursor: pointer;">
+                                            <div class="variant-label">CONTROL (A)</div>
+                                            <img src="oldsuggestionchip.jpg" alt="Control Suggestion Chip" class="variant-image">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="variant-col variant-col-equal">
+                                        <div class="variant-image-placeholder variant-b-full" onclick="openZoomView(this, 'variant')" style="cursor: pointer;">
+                                            <div class="variant-label">VARIANT (B)</div>
+                                            <video autoplay loop muted playsinline class="variant-video">
+                                                <source src="suggestionchip.mp4" type="video/mp4">
+                                            </video>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="ab-bottom-row">
+                                    <div class="ab-hypothesis-card">
+                                        <div class="ab-metric-label">HYPOTHESIS</div>
+                                        <p class="ab-hypothesis-text">Contextual suggestion chips will prompt more intentional in-Editor actions, increasing early activation and deeper adoption of Jasper's core features.</p>
+                                    </div>
+                                    
+                                    <div class="ab-metrics-section">
+                                        <div class="ab-metric-card">
+                                            <div class="ab-metric-label">COPILOT / CHAT USAGE</div>
+                                            <div class="ab-metric-value positive">+24%</div>
+                                        </div>
+                                        <div class="ab-metric-card">
+                                            <div class="ab-metric-label">CONTENT REMIX</div>
+                                            <div class="ab-metric-value positive">+18%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Experiment: Get started hero -->
+                            <div class="experiment-panel" data-panel="hero">
+                                <div class="ab-test-header">
+                                    <h2 class="ab-test-title">Get Started Hero</h2>
+                                    <p class="ab-test-subheading">Redesigned hero section to improve first-time user activation.</p>
+                                </div>
+                                
+                                <div class="ab-comparison">
+                                    <div class="variant-col variant-col-equal">
+                                        <div class="variant-image-placeholder variant-a-style" onclick="openZoomView(this, 'baseline')" style="cursor: pointer;">
+                                            <div class="variant-label">CONTROL (A)</div>
+                                            <img src="oldgetstarted.jpg" alt="Control Get Started" class="variant-image">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="variant-col variant-col-equal">
+                                        <div class="variant-image-placeholder variant-b-full" onclick="openZoomView(this, 'variant')" style="cursor: pointer;">
+                                            <div class="variant-label">VARIANT (B)</div>
+                                            <video autoplay loop muted playsinline class="variant-video">
+                                                <source src="getstarted.mp4" type="video/mp4">
+                                            </video>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="ab-bottom-row">
+                                    <div class="ab-hypothesis-card">
+                                        <div class="ab-metric-label">HYPOTHESIS</div>
+                                        <p class="ab-hypothesis-text">A clearer value proposition in the hero will increase trial-to-activation rates.</p>
+                                    </div>
+                                    
+                                    <div class="ab-metrics-section">
+                                        <div class="ab-metric-card">
+                                            <div class="ab-metric-label">ACTIVATION</div>
+                                            <div class="ab-metric-value positive">+9%</div>
+                                        </div>
+                                        <div class="ab-metric-card">
+                                            <div class="ab-metric-label">BOUNCE RATE</div>
+                                            <div class="ab-metric-value positive">-14%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Experiment: Zero to Project -->
+                            <div class="experiment-panel" data-panel="zerotoproject">
+                                <div class="ab-test-header">
+                                    <h2 class="ab-test-title">Zero to Project</h2>
+                                    <p class="ab-test-subheading">Streamlined onboarding to help users create their first project faster.</p>
+                                </div>
+                                
+                                <div class="ab-comparison">
+                                    <div class="variant-col variant-col-equal">
+                                        <div class="variant-image-placeholder variant-a-style" onclick="openZoomView(this, 'baseline')" style="cursor: pointer;">
+                                            <div class="variant-label">CONTROL (A)</div>
+                                            <img src="oldgetstarted.jpg" alt="Control Zero to Project" class="variant-image">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="variant-col variant-col-equal">
+                                        <div class="variant-image-placeholder variant-b-full" onclick="openZoomView(this, 'variant')" style="cursor: pointer;">
+                                            <div class="variant-label">VARIANT (B)</div>
+                                            <video autoplay loop muted playsinline class="variant-video">
+                                                <source src="zerotoproject.mp4" type="video/mp4">
+                                            </video>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="ab-bottom-row">
+                                    <div class="ab-hypothesis-card">
+                                        <div class="ab-metric-label">HYPOTHESIS</div>
+                                        <p class="ab-hypothesis-text">Reducing steps to first project will improve trial conversion and early retention.</p>
+                                    </div>
+                                    
+                                    <div class="ab-metrics-section">
+                                        <div class="ab-metric-card">
+                                            <div class="ab-metric-label">TIME TO VALUE</div>
+                                            <div class="ab-metric-value positive">-45%</div>
+                                        </div>
+                                        <div class="ab-metric-card">
+                                            <div class="ab-metric-label">COMPLETION</div>
+                                            <div class="ab-metric-value positive">+28%</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -352,6 +547,14 @@
     <div class="modal" id="modal">
         <div class="modal-content" id="modalContent">
             <!-- Content will be populated from card when clicked -->
+        </div>
+    </div>
+
+    <!-- Zoom Modal for Variant Images/Videos -->
+    <div class="zoom-modal" id="zoomModal" onclick="closeZoomView()">
+        <div class="zoom-modal-content" onclick="event.stopPropagation()">
+            <button class="zoom-close-btn" onclick="closeZoomView()">×</button>
+            <div class="zoom-content" id="zoomContent"></div>
         </div>
     </div>
 
