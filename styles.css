@@ -97,6 +97,17 @@ body {
     text-align: left;
 }
 
+.portfolio-link {
+    color: var(--retro-blue);
+    text-decoration: none;
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+}
+
+.portfolio-link:hover {
+    opacity: 0.7;
+}
+
 .intro-title {
     font-family: 'Playfair Display', serif;
     font-size: 48px;
@@ -810,7 +821,8 @@ body {
     overflow: hidden;
 }
 
-.modal-video {
+.modal-video,
+.modal-image {
     width: 100%;
     height: 100%;
     object-fit: contain;
