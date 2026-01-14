@@ -1009,7 +1009,7 @@ body {
 
 /* Content Sections */
 .content-section {
-    margin-bottom: 32px;
+    margin-bottom: 24px;
 }
 
 .section-label {
@@ -1017,7 +1017,7 @@ body {
     font-size: 13px;
     font-weight: 700;
     color: var(--retro-blue);
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
@@ -1025,21 +1025,21 @@ body {
 .content-section p {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 16px;
-    line-height: 1.7;
+    line-height: 1.5;
     color: rgba(26, 26, 108, 0.9);
 }
 
 .impact-list {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     font-size: 16px;
-    line-height: 1.7;
+    line-height: 1.5;
     color: rgba(26, 26, 108, 0.9);
-    margin-top: 16px;
+    margin-top: 12px;
     padding-left: 24px;
 }
 
 .impact-list li {
-    margin-bottom: 12px;
+    margin-bottom: 6px;
 }
 
 /* Responsive adjust for split layout */
