@@ -471,6 +471,7 @@ body {
     overflow: hidden;
 }
 
+
 .card-with-image .card-content {
     flex: 0 0 auto;
 }
@@ -946,11 +947,24 @@ body {
 }
 
 .modal-description {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Playfair Display', serif;
     font-size: 18px;
     line-height: 1.6;
     color: rgba(26, 26, 108, 0.85);
-    margin-bottom: 20px;
+    margin-bottom: 16px;
+}
+
+.modal-bullets {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    color: rgba(26, 26, 108, 0.8);
+    margin: 0 0 16px 0;
+    padding-left: 20px;
+}
+
+.modal-bullets li {
+    margin-bottom: 6px;
 }
 
 .walkthrough-cta {
