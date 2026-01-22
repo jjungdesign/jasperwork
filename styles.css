@@ -895,7 +895,7 @@ body {
 
 .details-body {
     flex: 1;
-    padding: 40px 32px 32px 32px;
+    padding: 28px 24px 24px 24px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -982,8 +982,10 @@ body {
     color: var(--retro-blue);
     font-style: italic;
     margin-top: auto;
-    padding: 14px 18px;
-    border: 2px solid var(--retro-blue);
+    padding: 10px 14px;
+    border: 1px solid rgba(26, 26, 108, 0.4);
+    outline: 3px solid var(--retro-blue);
+    outline-offset: 4px;
     text-align: center;
 }
 
