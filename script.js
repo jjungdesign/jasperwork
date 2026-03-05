@@ -206,8 +206,7 @@ cards.forEach(card => {
             return;
         }
         
-        // Don't drag if card is expanded
-        if (card.classList.contains('expanded')) {
+        if (card.classList.contains('expanded') || card.classList.contains('card-detail-open') || card.classList.contains('experiments-open')) {
             return;
         }
         
@@ -239,13 +238,12 @@ cards.forEach(card => {
     
     // Handle card click - whole card is clickable, expand if we didn't drag
     card.addEventListener('click', (e) => {
-        // Don't expand if clicking close button
-        if (e.target.closest('.close-btn') || e.target.closest('.close-btn-square')) return;
-        // Don't expand if already expanded
-        if (card.classList.contains('expanded')) return;
-        
+        if (e.target.closest('.close-btn') || e.target.closest('.close-btn-square') || e.target.closest('.card-detail-close')) return;
+
+        const isStatBlock = card.classList.contains('stat-block');
+        if (!isStatBlock && (card.classList.contains('expanded') || card.classList.contains('card-detail-open'))) return;
+
         e.stopPropagation();
-        // Small delay to check if we actually dragged
         setTimeout(() => {
             if (!isDraggingCard && !hasDragged && !isDragging) {
                 expandCard(card);
@@ -258,91 +256,318 @@ cards.forEach(card => {
 // Intro section reference (for hiding behind expanded cards)
 const introSection = document.querySelector('.intro-section');
 
-function expandCard(card) {
-    // Close any previously opened modal
-    if (expandedCard) {
-        closeModal();
-    }
-    
-    // Get the expanded content from the card
-    const expandedContent = card.querySelector('.card-expanded-content');
-    if (!expandedContent) return;
-    
-    // Clone the content and add to modal
-    const clonedContent = expandedContent.cloneNode(true);
-    modalContent.innerHTML = '';
-    modalContent.appendChild(clonedContent);
-    
-    // Update close button to use modal close function
-    const closeBtn = modalContent.querySelector('.close-btn') || modalContent.querySelector('.close-btn-square');
-    if (closeBtn) {
-        closeBtn.onclick = closeModal;
-    }
-    
-    // Hide intro section behind the modal
-    if (introSection) {
-        introSection.classList.add('hidden-behind');
-    }
-    
-    // Show modal and overlay
-    modal.classList.add('active');
-    overlay.classList.add('active');
-    expandedCard = card;
-    
-    // Prevent canvas scrolling when modal is open
-    canvas.style.overflow = 'hidden';
+// (slide-panel removed -- using in-card detail expansion now)
 
-    // Initialize archive interactions if present
-    if (modalContent.querySelector('.archive-layout')) {
-        initArchiveInteractions();
+// ============================================
+// EXPERIMENT MINI-CARDS (scatter from +15 card)
+// ============================================
+let experimentsOpen = false;
+let experimentMiniCards = [];
+let experimentsParentCard = null;
+
+const experimentItems = [
+    { id: 'signup', title: 'Progressive Signup', metricLabel: 'SURVEY COMPLETION', metricValue: '+10%' },
+    { id: 'askjasper', title: 'Ask Jasper', metricLabel: 'ASK JASPER USAGE', metricValue: '+22%' },
+    { id: 'suggestion', title: 'Suggestion Chip', metricLabel: 'CHAT USAGE', metricValue: '+24%' },
+    { id: 'hero', title: 'Get Started Hero', metricLabel: 'FIRST CONTENT GENERATED', metricValue: '+8%' },
+    { id: 'zerotoproject', title: 'Zero to Project', metricLabel: 'TIME TO FIRST PROJECT', metricValue: '-32%' },
+];
+
+function toggleExperiments(card) {
+    if (experimentsOpen) {
+        collapseExperiments();
+        return;
+    }
+
+    experimentsParentCard = card;
+    card.classList.add('experiments-open');
+
+    const cardLeft = card.offsetLeft;
+    const cardTop = card.offsetTop;
+    const cardW = card.offsetWidth;
+    const cardH = card.offsetHeight;
+    const startX = cardLeft + cardW / 2;
+    const startY = cardTop + cardH / 2;
+
+    const gap = 12;
+    const miniCardHeight = 80;
+    const columnX = cardLeft + cardW + 16;
+    const columnStartY = cardTop;
+
+    experimentItems.forEach((item, i) => {
+        const el = document.createElement('div');
+        el.className = 'experiment-mini-card';
+        el.dataset.experiment = item.id;
+
+        el.style.setProperty('--mini-rotation', '0deg');
+
+        el.innerHTML =
+            '<div class="mini-card-title">' + item.title + '</div>' +
+            '<div class="mini-card-metric">' +
+                '<span class="mini-metric-value">' + item.metricValue + '</span>' +
+                '<span class="mini-metric-label">' + item.metricLabel + '</span>' +
+            '</div>';
+
+        const targetX = columnX;
+        const targetY = columnStartY + i * (miniCardHeight + gap);
+
+        el.style.left = startX + 'px';
+        el.style.top = startY + 'px';
+
+        canvasSpace.appendChild(el);
+
+        el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (el.classList.contains('expanded')) return;
+            expandExperimentCard(el, item.id);
+        });
+        el.addEventListener('mousedown', (e) => {
+            e.stopPropagation();
+        });
+
+        experimentMiniCards.push(el);
+
+        setTimeout(() => {
+            el.style.left = targetX + 'px';
+            el.style.top = targetY + 'px';
+            el.classList.add('visible');
+        }, 50 + i * 60);
+    });
+
+    experimentsOpen = true;
+}
+
+function collapseExperiments() {
+    if (!experimentsOpen) return;
+
+    collapseExperimentCard();
+
+    if (experimentsParentCard) {
+        const centerX = experimentsParentCard.offsetLeft + experimentsParentCard.offsetWidth / 2;
+        const centerY = experimentsParentCard.offsetTop + experimentsParentCard.offsetHeight / 2;
+
+        experimentMiniCards.forEach((el, i) => {
+            el.classList.remove('visible', 'expanded');
+            el.classList.add('collapsing');
+            el.style.left = centerX + 'px';
+            el.style.top = centerY + 'px';
+        });
+
+        setTimeout(() => {
+            experimentMiniCards.forEach(el => {
+                if (el.parentNode) el.parentNode.removeChild(el);
+            });
+            experimentMiniCards = [];
+        }, 400);
+
+        experimentsParentCard.classList.remove('experiments-open');
+        experimentsParentCard = null;
+    }
+
+    experimentsOpen = false;
+}
+
+let expandedMiniCard = null;
+
+function expandExperimentCard(miniCardEl, panelId) {
+    if (expandedMiniCard) {
+        collapseExperimentCard();
+    }
+
+    if (!experimentsParentCard) return;
+    const expandedContent = experimentsParentCard.querySelector('.card-expanded-content');
+    if (!expandedContent) return;
+
+    const panel = expandedContent.querySelector('.experiment-panel[data-panel="' + panelId + '"]');
+    if (!panel) return;
+
+    const clonedPanel = panel.cloneNode(true);
+    clonedPanel.classList.add('active');
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'expanded-experiment-content';
+
+    const closeBar = document.createElement('div');
+    closeBar.className = 'expanded-experiment-close';
+    const closeBtn = document.createElement('button');
+    closeBtn.innerHTML = '&times;';
+    closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        collapseExperimentCard();
+    });
+    closeBar.appendChild(closeBtn);
+
+    wrapper.appendChild(closeBar);
+    wrapper.appendChild(clonedPanel);
+
+    miniCardEl.appendChild(wrapper);
+    miniCardEl.classList.add('expanded');
+
+    expandedMiniCard = miniCardEl;
+
+    const videos = wrapper.querySelectorAll('video');
+    videos.forEach(v => { v.play().catch(() => {}); });
+}
+
+function collapseExperimentCard() {
+    if (!expandedMiniCard) return;
+
+    const content = expandedMiniCard.querySelector('.expanded-experiment-content');
+    if (content) content.remove();
+
+    expandedMiniCard.classList.remove('expanded');
+    expandedMiniCard = null;
+}
+
+function expandCard(card) {
+    if (expandedCard) {
+        closeExpandedCard();
+    }
+
+    const isProjectCard = card.hasAttribute('data-project');
+    const isStatBlock = card.classList.contains('stat-block');
+
+    if (isStatBlock) {
+        toggleExperiments(card);
+    } else if (isProjectCard) {
+        const slidePanelBody = card.querySelector('.slide-panel-body');
+        if (!slidePanelBody) return;
+
+        const bullets = slidePanelBody.querySelector('.modal-bullets');
+        if (!bullets) return;
+
+        const detailBody = document.createElement('div');
+        detailBody.className = 'card-detail-body';
+
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'card-detail-close';
+        closeBtn.innerHTML = '&times;';
+        closeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeExpandedCard();
+        });
+
+        const clonedBullets = bullets.cloneNode(true);
+
+        const cta = document.createElement('div');
+        cta.className = 'card-detail-cta';
+        cta.textContent = 'Case study coming soon';
+
+        detailBody.appendChild(closeBtn);
+        detailBody.appendChild(clonedBullets);
+        detailBody.appendChild(cta);
+
+        card.appendChild(detailBody);
+        card.classList.add('card-detail-open');
+        expandedCard = card;
+    } else {
+        const expandedContent = card.querySelector('.card-expanded-content');
+        if (!expandedContent) return;
+
+        const clonedContent = expandedContent.cloneNode(true);
+        modalContent.innerHTML = '';
+        modalContent.appendChild(clonedContent);
+
+        const closeBtn = modalContent.querySelector('.close-btn') || modalContent.querySelector('.close-btn-square');
+        if (closeBtn) {
+            closeBtn.onclick = closeExpandedCard;
+        }
+
+        if (introSection) {
+            introSection.classList.add('hidden-behind');
+        }
+
+        modal.classList.add('active');
+        overlay.classList.add('active');
+        expandedCard = card;
+
+        canvas.style.overflow = 'hidden';
+
+        if (modalContent.querySelector('.archive-layout')) {
+            initArchiveInteractions();
+        }
     }
 }
 
-function closeModal() {
-    // Hide modal and overlay
-    modal.classList.remove('active');
-    overlay.classList.remove('active');
-    
-    // Clear modal content
-    modalContent.innerHTML = '';
-    
-    // Restore intro section z-index
+function closeExpandedCard() {
+    if (!expandedCard) return;
+
+    if (expandedCard.classList.contains('card-detail-open')) {
+        const detailBody = expandedCard.querySelector('.card-detail-body');
+        if (detailBody) detailBody.remove();
+        expandedCard.classList.remove('card-detail-open');
+    } else {
+        modal.classList.remove('active');
+        overlay.classList.remove('active');
+        modalContent.innerHTML = '';
+        canvas.style.overflow = 'auto';
+    }
+
     if (introSection) {
         introSection.classList.remove('hidden-behind');
     }
-    
+
     expandedCard = null;
-    
-    // Re-enable canvas scrolling
-    canvas.style.overflow = 'auto';
 }
 
-// Keep closeCard for backward compatibility (in case any onclick handlers still use it)
+function closeModal() {
+    closeExpandedCard();
+}
+
 function closeCard(closeButton) {
-    closeModal();
+    closeExpandedCard();
 }
 
-// Close modal when clicking overlay
+function closeSlidePanel() {
+    // Legacy stub -- slide panels no longer used
+}
+
 overlay.addEventListener('click', () => {
     if (expandedCard) {
-        closeModal();
+        closeExpandedCard();
     }
 });
 
-// Close modal with Escape key
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && expandedCard) {
-        closeModal();
+    if (e.key === 'Escape') {
+        if (expandedMiniCard) {
+            collapseExperimentCard();
+            return;
+        }
+        if (experimentsOpen) {
+            collapseExperiments();
+        }
+        if (expandedCard) {
+            closeExpandedCard();
+        }
     }
 });
 
-// Prevent card expansion when clicking inside expanded content
+// Prevent card expansion when clicking inside expanded content or slide panel
 cards.forEach(card => {
     const expandedContent = card.querySelector('.card-expanded-content');
     if (expandedContent) {
         expandedContent.addEventListener('click', (e) => {
             e.stopPropagation();
         });
+    }
+});
+
+// Close in-card detail, experiments, or expanded mini-card when clicking on canvas background
+canvas.addEventListener('click', (e) => {
+    if (expandedMiniCard && !e.target.closest('.experiment-mini-card')) {
+        collapseExperimentCard();
+        return;
+    }
+    if (experimentsOpen) {
+        if (!e.target.closest('.project-card') && !e.target.closest('.experiment-mini-card')) {
+            collapseExperiments();
+        }
+    }
+    if (expandedCard && expandedCard.classList.contains('card-detail-open')) {
+        if (!e.target.closest('.project-card')) {
+            closeExpandedCard();
+        }
     }
 });
 

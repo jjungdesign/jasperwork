@@ -516,6 +516,265 @@ body {
     display: none;
 }
 
+/* ============================================
+   IN-CARD DETAIL for Project Cards 1-3
+   ============================================ */
+.slide-panel {
+    display: none;
+}
+
+.project-card.card-detail-open {
+    max-height: none !important;
+    z-index: 500 !important;
+    cursor: default;
+    transform: rotate(0deg) !important;
+    box-shadow: 6px 6px 0 var(--retro-blue) !important;
+    transition: none !important;
+    overflow: hidden;
+}
+
+.project-card.card-detail-open .card-image-container {
+    display: none;
+}
+
+.card-detail-body {
+    padding: 4px 24px 24px 24px;
+    position: relative;
+}
+
+.card-detail-close {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    margin-bottom: 8px;
+    width: 28px;
+    height: 28px;
+    border: 2px solid var(--retro-blue);
+    background: #ffffff;
+    color: var(--retro-blue);
+    font-size: 16px;
+    cursor: pointer;
+    justify-content: center;
+    line-height: 1;
+    z-index: 10;
+}
+
+.card-detail-close:hover {
+    background: var(--retro-blue);
+    color: #ffffff;
+}
+
+.card-detail-body .modal-bullets {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    color: var(--retro-blue);
+    line-height: 1.4;
+    margin: 0;
+    padding-left: 18px;
+}
+
+.card-detail-body .modal-bullets li {
+    margin-bottom: 6px;
+}
+
+.card-detail-cta {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border: 3px solid var(--retro-blue);
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    text-align: center;
+    text-transform: uppercase;
+    background-color: var(--retro-blue);
+    background-image:
+        radial-gradient(circle, rgba(255,255,255,0.18) 1px, transparent 1px);
+    background-size: 3px 3px;
+    image-rendering: pixelated;
+}
+
+/* ============================================
+   EXPERIMENT MINI-CARDS (scattered from +15)
+   ============================================ */
+.experiment-mini-card {
+    position: absolute;
+    width: 200px;
+    background: #ffffff;
+    border: 2px solid var(--retro-blue);
+    box-shadow: 6px 6px 0 var(--retro-blue);
+    padding: 16px 18px;
+    cursor: pointer;
+    z-index: 400;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                left 0.4s cubic-bezier(0.4, 0, 0.2, 1), top 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                width 0.35s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s ease,
+                box-shadow 0.2s ease;
+    pointer-events: none;
+    user-select: none;
+}
+
+.experiment-mini-card.visible {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: all;
+}
+
+.experiment-mini-card.collapsing {
+    opacity: 0;
+    transform: scale(0.5);
+    pointer-events: none;
+}
+
+.experiment-mini-card:hover {
+    box-shadow: 8px 8px 0 var(--retro-blue);
+    transform: translate(-2px, -2px) scale(1);
+}
+
+.experiment-mini-card.expanded {
+    width: 780px;
+    z-index: 600;
+    cursor: default;
+    overflow-y: auto;
+    max-height: 80vh;
+    padding: 0;
+}
+
+.experiment-mini-card.expanded:hover {
+    transform: scale(1);
+    box-shadow: 6px 6px 0 var(--retro-blue);
+}
+
+.experiment-mini-card.expanded .mini-card-title,
+.experiment-mini-card.expanded .mini-card-metric {
+    display: none;
+}
+
+.experiment-mini-card .expanded-experiment-content {
+    padding: 28px 32px;
+}
+
+.experiment-mini-card .expanded-experiment-close {
+    position: sticky;
+    top: 0;
+    display: flex;
+    justify-content: flex-end;
+    padding: 12px 16px 0 0;
+    background: #ffffff;
+    z-index: 10;
+}
+
+.experiment-mini-card .expanded-experiment-close button {
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--retro-blue);
+    background: #ffffff;
+    color: var(--retro-blue);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.experiment-mini-card .expanded-experiment-close button:hover {
+    background: var(--retro-blue);
+    color: #ffffff;
+}
+
+.experiment-mini-card.expanded .ab-comparison {
+    flex-direction: column;
+}
+
+.experiment-mini-card.expanded .variant-col-equal {
+    max-width: 100%;
+}
+
+.experiment-mini-card.expanded .ab-bottom-row {
+    flex-direction: column;
+}
+
+.experiment-mini-card.expanded .experiment-panel.active {
+    display: flex;
+    flex-direction: column;
+}
+
+.experiment-mini-card.expanded .ab-test-header {
+    order: 1;
+}
+
+.experiment-mini-card.expanded .ab-bottom-row .ab-hypothesis-card {
+    order: 2;
+    margin-bottom: 24px;
+}
+
+.experiment-mini-card.expanded .ab-comparison {
+    order: 3;
+}
+
+.experiment-mini-card.expanded .ab-bottom-row {
+    order: 2;
+    display: contents;
+}
+
+.experiment-mini-card.expanded .ab-metrics-section {
+    order: 4;
+    margin-top: 24px;
+}
+
+.experiment-mini-card .mini-card-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--retro-blue);
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: 10px;
+}
+
+.experiment-mini-card .mini-card-metric {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.experiment-mini-card .mini-metric-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--retro-blue);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    opacity: 0.6;
+}
+
+.experiment-mini-card .mini-metric-value {
+    font-family: 'Doto', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--retro-blue);
+    letter-spacing: -0.02em;
+}
+
+.compact-card.experiments-open {
+    background: #ffffff !important;
+    z-index: 450 !important;
+}
+
+.compact-card.experiments-open .stat-number {
+    color: var(--retro-blue) !important;
+}
+
+.compact-card.experiments-open .stat-label {
+    color: var(--retro-blue) !important;
+    opacity: 0.7;
+}
+
 .card-title {
     font-family: 'Playfair Display', Georgia, serif;
     font-size: 28px;
@@ -1341,8 +1600,8 @@ body {
 }
 
 .ab-test-subheading {
-    font-family: 'Space Mono', monospace;
-    font-size: 14px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 15px;
     color: var(--retro-blue);
     margin: 0;
     line-height: 1.5;
@@ -1516,14 +1775,16 @@ body {
 .ab-metrics-section {
     display: flex;
     gap: 12px;
-    flex: 0 0 auto;
+    flex: 1;
+    width: 100%;
 }
 
 .ab-metric-card {
     background: #f8f8fc;
-    border: 1px solid rgba(26, 26, 108, 0.1);
+    border: 2px solid var(--retro-blue);
     padding: 16px 20px;
     min-width: 100px;
+    flex: 1;
 }
 
 .ab-metric-label {
@@ -1536,9 +1797,9 @@ body {
 }
 
 .ab-metric-value {
-    font-family: 'Space Mono', monospace;
+    font-family: 'Doto', sans-serif;
     font-size: 32px;
-    font-weight: 700;
+    font-weight: 900;
     color: var(--retro-blue);
     letter-spacing: -0.02em;
 }
@@ -1553,7 +1814,7 @@ body {
 
 .ab-hypothesis-card {
     background: #f8f8fc;
-    border: 1px solid rgba(26, 26, 108, 0.1);
+    border: 2px solid var(--retro-blue);
     padding: 20px 24px;
     flex: 2;
 }
@@ -1561,7 +1822,8 @@ body {
 .ab-hypothesis-text {
     font-family: 'Playfair Display', serif;
     font-size: 16px;
-    font-style: italic;
+    font-style: normal;
+    font-weight: 700;
     color: var(--retro-blue);
     margin: 0;
     line-height: 1.5;
@@ -1698,16 +1960,9 @@ body {
     border-color: #cc0000;
 }
 
-/* Retro Folder Icon */
+/* Retro Folder Icon - hidden */
 .archive-sidebar .folder-icon {
-    width: 28px;
-    height: 22px;
-    background: #ffc000;
-    border: 2px solid #000;
-    position: relative;
-    box-shadow: 1px 1px 0 rgba(0,0,0,0.3);
-    margin-right: 8px;
-    flex-shrink: 0;
+    display: none;
 }
 
 .archive-sidebar .folder-icon::before {
